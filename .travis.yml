@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "10"
+deploy:
+  provider: heroku
+  app: beam-hub
+  on:
+    repo: janbro/BeamHub
+    branch: master
