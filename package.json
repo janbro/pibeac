@@ -3,12 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "devstart": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
+    "postinstall": "ng build --aot -prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "compodoc": "npx compodoc -p src/tsconfig.app.json --theme Readthedocs"
+  },
+  "engines": {
+    "node": "10.12.0",
+    "npm": "6.8.0"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +28,10 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
+    "express": "^4.16.4",
+    "path": "^0.12.7",
     "rxjs": "~6.2.0",
+    "typescript": "^3.2.4",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
