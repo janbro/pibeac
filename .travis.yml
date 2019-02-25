@@ -7,3 +7,6 @@ deploy:
   on:
     repo: janbro/BeamHub
     branch: master
+after_success:
+  - npm run compodoc
+  - ./deploy.sh
