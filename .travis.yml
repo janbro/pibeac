@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+- '10'
+deploy:
+  provider: heroku
+  api_key:
+    secure: Y3yRomE9D+Pfj9EjYetkMrlxe/BB1nwv39P8nvQQFw0JkZYVfZOOgwc6PD6HSBKTimjHYtJiLo76nWlII+9JcFP+utuksArL29q7numwdibEuH/ijgqGRLccs0UFcRF0uCL1tcpBJN74i7zbD+edUzBihvRpVaUX9e2mtOQoBtKQC8WLntoLB0AXa+2vH8AgNErPKX8ocx/NasYrAhmlYkCqf4X+Zhm3UoElbKr7G+CesAwYaIBdJ4WTTPyVFJDxx/QZdHiElOKHAqjRRhrmvVu/cdgD0VT3QHkrSkfZ6ZWJTC9uCrr5xbp54u7QWWOClw6swj8G0mL01BjUAIIGztN1fyjJ1Qw+DbHwfDSpqObh8vxxSdOALz7KsrktSkRcpjrsKYyk6dpHTZuigwDw40mhTVB9Fp3dkyYuZUUIPRpPeAvlh8XUFk6NQQjLFgD1PRcjBKJjnrGIsSd75NJoLEnW29Ykv/cAapDXj8XGLrq/H4sPwxcbxc9cR/UHaU8vVzDU40rNH3Q5K9iZV0UXWkYqoSqMsGHNPEKQH+kaEZdHzp/Ok3/Tl61UOujRuPuvZoVwdc0+0fMzkHhiXQhaiwI1yIPbgTKGZ9BCzyUFd7/EN0yGhqaG91exHTiEQ4fHDZjmFnIHX55PErs/7zy5WdDMOrlv+HDDXOdc+PqZQHc=
+  app: beam-hub-backend
+  on:
+    repo: janbro/BeamHubBackend
+    branch: master
