@@ -33,7 +33,6 @@ describe('Controller CRUD tests', function() {
         agent.get('/api/beacons/' + '123456789')
             .expect(200)
             .end(function(err, res) {
-                console.log(res.body);
                 should.not.exist(err);
                 should.exist(res);
                 res.body.action.name.should.be.eql("URL");

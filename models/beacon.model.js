@@ -5,13 +5,13 @@ var mongoose = require('mongoose'),
 /* Create your schema */
 var BeaconSchema = new Schema(
     {
-      "id": Number,
+      "id": String,
       "action": {
         "value": String,
         "name": String,
-        "id": Number
+        "kind": Number
       },
-      "owner": Number
+      "owner": String
   }, {
     collection: "Beacons"
   }
