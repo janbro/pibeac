@@ -24,7 +24,7 @@ describe('Controller CRUD tests', function() {
             .end(function(err, res) {
                 should.not.exist(err);
                 should.exist(res);
-                res.body.should.have.length.above(1);
+                res.body.should.not.be.empty();
                 done();
             });
     });
@@ -33,9 +33,10 @@ describe('Controller CRUD tests', function() {
         agent.get('/api/beacons/' + '123456789')
             .expect(200)
             .end(function(err, res) {
+                console.log(res.body);
                 should.not.exist(err);
                 should.exist(res);
-                res.body.beacon.should.have.length(1);
+                res.body.action.name.should.be.eql("URL");
                 done();
             });
     });
