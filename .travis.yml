@@ -9,4 +9,4 @@ deploy:
     branch: master
 after_success:
   - npm run compodoc
-  - ./deploy.sh
+  - bash ./deploy.sh
