@@ -10,12 +10,14 @@
     "test": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json --theme Readthedocs"
+    "compodoc": "npx compodoc -p src/tsconfig.app.json -d docs/ --theme Readthedocs",
+    "servedocs": "compodoc -s"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/janbro/BeamHub.git"
   },
+  "author": "Alejandro Munoz-McDonald",
   "engines": {
     "node": "10.12.0",
     "npm": "6.8.0"
