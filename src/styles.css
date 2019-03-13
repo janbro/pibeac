@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+.greyed {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    background-color: #000;
+}

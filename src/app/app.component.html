@@ -1,20 +1,20 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="assets/favicon.svg">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<!-- As a heading -->
+<nav class="navbar navbar-dark navbar-expand-md bg-dark justify-content-between">
+    <a class="navbar-brand mb-0 h1" routerLink="/"><img src="/assets/beac_logo.png" style="width:120px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse pull-right" id="navbarToggler">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item my-2 my-lg-0">
+                <a class="nav-link" routerLink="/login">Login</a>
+            </li>
+            <li class="nav-item my-2 my-lg-0">
+                <a class="nav-link" routerLink="/register">Register</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<router-outlet></router-outlet>
 
