@@ -11,9 +11,24 @@ import { AuthenticationService } from '../services/authentication.service';
     templateUrl: 'login.component.html'
 })
 export class LoginComponent implements OnInit {
+    /**
+     * Variable containing form values
+     */
     loginForm: FormGroup;
+
+    /**
+     * Shows spinner when true
+     */
     loading = false;
+
+    /**
+     * Activates input validation
+     */
     submitted = false;
+
+    /**
+     * URL to redirect to after successful login
+     */
     returnUrl: string;
 
     constructor(
@@ -39,6 +54,9 @@ export class LoginComponent implements OnInit {
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
 
+    /**
+     * Run when login button is clicked. Redirects to returnUrl on success.
+     */
     onSubmit() {
         this.submitted = true;
 

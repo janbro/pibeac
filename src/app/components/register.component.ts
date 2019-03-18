@@ -11,8 +11,19 @@ import { UserService } from '../services/user.service';
     templateUrl: 'register.component.html'
 })
 export class RegisterComponent implements OnInit {
+    /**
+     * Variable containing form data
+     */
     registerForm: FormGroup;
+
+    /**
+     * Shows spinner when true
+     */
     loading = false;
+
+    /**
+     * Activates input validation
+     */
     submitted = false;
 
     constructor(
@@ -21,17 +32,26 @@ export class RegisterComponent implements OnInit {
         private userService: UserService,
         private alertService: AlertService) { }
 
+    /**
+     * Initialize form data
+     */
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
-            owner: ['', Validators.required],
+            name: ['', Validators.required],
             username: ['', Validators.required],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            email: ['', Validators.required]
         });
     }
 
-    // convenience getter for easy access to form fields
+    /**
+     * Convenience getter for easy access to form fields
+     * */
     get f() { return this.registerForm.controls; }
 
+    /**
+     * Sends form data to registration endpoint and redirects to login on success
+     */
     onSubmit() {
         this.submitted = true;
 
