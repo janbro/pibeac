@@ -10,7 +10,7 @@
     "name": "beamhubbackend",
     "url": "https://github.com/janbro/BeamHubBackend.git"
   },
-  "author": "Alejandro Munoz-McDonald",
+  "author": "Alejandro Munoz",
   "license": "ISC",
   "dependencies": {
     "@types/cors": "^2.8.4",
