@@ -3,40 +3,56 @@ var path = require('path'),
     mongoose = require('mongoose'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
     config = require('./config'),
-    BeaconRouter = require('../routes/beacon-api.routes');
+    UserController = require('../controllers/user.controller.js'),
+    BeaconRouter = require('../routes/beacon-api.routes'),
+    UserRouter = require('../routes/user.routes');
 const cors = require('cors');
 
-var __clientdir = './dist';
+var __clientdir = './../BeamHubSite/dist/BeamHubSite/';
 
 module.exports.init = function() {
-  // Connect to database
-  mongoose.connect(config.db.uri, { useNewUrlParser: true });
+    // Connect to database
+    mongoose.connect(config.db.uri, { useNewUrlParser: true });
 
-  // Initialize app
-  var app = express();
+    // Initialize app
+    var app = express();
 
-  app.use(cors());
+    app.use(cors());
 
-  // Enable request logging for development debugging
-  app.use(morgan('dev'));
+    //use sessions for tracking logins
+    // app.use(session({
+    //     secure: 'true',
+    //     secret: 'work hard',
+    //     resave: true,
+    //     saveUninitialized: false
+    // }));
 
-  // Body parsing middleware 
-  app.use(bodyParser.json());
-  
-  app.use('/', express.static(path.resolve(__clientdir)));
-  
-  app.get('/', function(req, res) {
-    res.sendFile('/index.html');
-  });
+    // Enable request logging for development debugging
+    app.use(morgan('dev'));
 
-  // Garages endpoint
-  app.use('/api/beacons', BeaconRouter);
+    // Body parsing middleware 
+    app.use(bodyParser.json());
 
-  // Go to homepage for all routes not specified
-  app.all('/*', function(req, res) {
-    res.redirect('/');
-  });
+    app.use(cookieParser());
+    
+    app.use('/', express.static(path.resolve(__clientdir)));
+    
+    app.get('/', function(req, res) {
+        res.sendFile('/index.html');
+    });
 
-  return app;
+    // Garages endpoint
+    app.use('/api/beacons', UserController.authenticate, BeaconRouter);
+
+    // User endpoint
+    app.use('/api/users', UserRouter);
+
+    // Go to homepage for all routes not specified
+    app.all('/*', function(req, res) {
+        res.redirect('/');
+    });
+
+    return app;
 };

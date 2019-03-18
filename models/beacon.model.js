@@ -11,6 +11,10 @@ var BeaconSchema = new Schema(
         "name": String,
         "kind": Number
       },
+      "location": {
+        "latitude": Number,
+        "longitude": Number
+      },
       "owner": String
   }, {
     collection: "Beacons"
