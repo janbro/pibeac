@@ -36,7 +36,7 @@ exports.register = async function(req, res) {
                 console.log(err);
                 res.status(400).send(err);
             } else {
-                res.send('Success');
+                res.status(200).send('Success');
             }
         });
     }
