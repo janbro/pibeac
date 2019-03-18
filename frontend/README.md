@@ -1,10 +1,10 @@
-# BeamHubSite
+# pibeac
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.5.
 
 ## Documentation
 
-[https://janbro.github.io/BeamHub/](https://janbro.github.io/BeamHub/)
+[https://janbro.github.io/pibeac/](https://janbro.github.io/pibeac/)
 
 ## Development server
 

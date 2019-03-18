@@ -10,7 +10,7 @@ var path = require('path'),
     UserRouter = require('../routes/user.routes');
 const cors = require('cors');
 
-var __clientdir = './../BeamHubSite/dist/BeamHubSite/';
+var __clientdir = './../frontend/dist/pibeac/';
 
 module.exports.init = function() {
     // Connect to database

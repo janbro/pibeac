@@ -18,27 +18,27 @@ describe('Controller CRUD tests', function() {
         agent = request.agent(server);
     });
 
-    it('should be able to retrieve beacons', function(done) {
-        agent.get('/api/beacons')
-            .expect(200)
-            .end(function(err, res) {
-                should.not.exist(err);
-                should.exist(res);
-                res.body.should.not.be.empty();
-                done();
-            });
-    });
+    // it('should be able to retrieve beacons', function(done) {
+    //     agent.get('/api/beacons')
+    //         .expect(200)
+    //         .end(function(err, res) {
+    //             should.not.exist(err);
+    //             should.exist(res);
+    //             res.body.should.not.be.empty();
+    //             done();
+    //         });
+    // });
 
-    it('should be able to retrieve a beacon', function(done) {
-        agent.get('/api/beacons/' + '123456789')
-            .expect(200)
-            .end(function(err, res) {
-                should.not.exist(err);
-                should.exist(res);
-                res.body.action.name.should.be.eql("URL");
-                done();
-            });
-    });
+    // it('should be able to retrieve a beacon', function(done) {
+    //     agent.get('/api/beacons/' + '123456789')
+    //         .expect(200)
+    //         .end(function(err, res) {
+    //             should.not.exist(err);
+    //             should.exist(res);
+    //             res.body.action.name.should.be.eql("URL");
+    //             done();
+    //         });
+    // });
 
     after(function(done) {
         mongoose.connection.close();

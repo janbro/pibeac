@@ -8,7 +8,8 @@ deploy:
   app: beam-hub
   on:
     repo: janbro/BeamHub
-    branch: master
+    branch: master'
+before_install:
+- npm run build
 after_success:
-- npm run compodoc
-- bash ./deploy.sh
+- cd frontend && npm run compodoc && bash ./deploy.sh

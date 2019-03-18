@@ -1,7 +1,7 @@
 {
-  "name": "beamhubbackend",
+  "name": "pibeac-backend",
   "version": "1.0.0",
-  "description": "Backend to beamhub site built on node.js",
+  "description": "Backend to beac site built on node.js",
   "main": "server.js",
   "scripts": {
     "test": "mocha tests"
