@@ -11,6 +11,7 @@ import { AuthenticationService } from '../services/authentication.service';
     templateUrl: 'login.component.html'
 })
 export class LoginComponent implements OnInit {
+
     /**
      * Variable containing form values
      */
@@ -36,13 +37,18 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private alertService: AlertService) {}
+        private alertService: AlertService) { }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
         });
+
+        if (this.route.snapshot.queryParams['username']) {
+            this.f.username.setValue(this.route.snapshot.queryParams['username']);
+            this.alertService.success('Registration successful', true);
+        }
 
         // reset login status
         this.authenticationService.logout();
@@ -70,9 +76,11 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate([this.returnUrl]);
+                    this.authenticationService.emitLogin(true);
+                    this.router.navigate([this.returnUrl], { relativeTo: this.route });
                 },
                 error => {
+                    console.log(error);
                     this.alertService.error(error);
                     this.loading = false;
                 });

@@ -2,6 +2,7 @@
 
 # secrets
 *secrets.json
+*.pem
 
 # compiled output
 */dist

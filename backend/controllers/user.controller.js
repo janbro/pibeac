@@ -19,7 +19,6 @@ exports.list = function(req, res) {
 };
 
 exports.register = async function(req, res) {
-    console.log(req.body);
     let user =  new User({
         'username': req.body.username,
         'name': req.body.name,
@@ -36,19 +35,19 @@ exports.register = async function(req, res) {
                 console.log(err);
                 res.status(400).send(err);
             } else {
-                res.status(200).send('Success');
+                res.status(200).send(user);
             }
         });
     }
 }
 
 exports.authenticate = function(req, res, next) {
-    let token = req.cookies['token'];
+    let token = JSON.parse(req.cookies['token']).token;
     jwt.verify(token, process.env.TOKEN_SIG, function(err, decoded) {
         if(err) {
             res.status(400).send(err);
         } else if(decoded) {
-            console.log(decoded);
+            // Token valid
             return next();
         } else {
             res.status(403).send('Not authenticated!');
@@ -65,8 +64,8 @@ exports.login = function(req, res) {
         } else if(doc === null) {
             res.status(400).send('User does not exist!');
         } else if(user.validatePassword(req.body.password)) {
-            res.cookie('token', user.generateJWT());
-            res.status(200).send();
+            res.cookie('token', JSON.stringify({ id: user.id, token: user.generateJWT() }));
+            res.status(200).send({_id:user._id, username: user.username, name: user.name, email: user.email});
         } else {
             res.status(403).send('Incorrect user or password');
         }
@@ -96,7 +95,18 @@ exports.delete = function(req, res) {
     });
 }
 
-// Returns user of passed id
+// Returns user
+exports.getUser = function(req, res, id) {
+    let user = {
+        _id: req.user._id,
+        name: req.user.name,
+        username: req.user.username,
+        email: req.user.email
+    };
+    res.status(200).send(user);
+};
+
+// Sets user of passed id
 exports.getUserByUsername = function(req, res, next, username) {
     User.findOne({'username': username}).exec((err, user) =>{
         if(err) {
@@ -108,14 +118,14 @@ exports.getUserByUsername = function(req, res, next, username) {
     });
 };
 
-// Returns user of passed id
+// Sets user of passed id
 exports.getUserById = function(req, res, next, id) {
-    User.findOne({'id': id}).exec((err, user) =>{
-      if(err) {
-        console.log(err);
-        res.status(400).send(err);
-      }
-      req.user = user;
-      next();
+    User.findOne({'_id': id}).exec((err, user) =>{
+        if(err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+        req.user = user;
+        next();
     });
 };

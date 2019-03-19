@@ -12,7 +12,7 @@ router.route('/')
   //.post();
 
 router.route('/:id')
-  .get(controller.getUserById)
+  .get(controller.getUser)
   .put(controller.update)
   .delete(controller.delete);
 
@@ -26,16 +26,9 @@ router.route('/login')
 
 // GET /logout
 router.get('/logout', function(req, res, next) {
-    if (req.session) {
-      // delete session object
-      req.session.destroy(function(err) {
-        if(err) {
-          return next(err);
-        } else {
-          return res.redirect('/');
-        }
-      });
-    }
+    // delete session object
+    res.cookie('token', '');
+    res.redirect('/');
 });
 
 router.route('/authenticate')

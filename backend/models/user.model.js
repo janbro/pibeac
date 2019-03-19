@@ -48,9 +48,7 @@ UserSchema.methods.validatePassword = function(password) {
 UserSchema.methods.generateJWT = function() {
     const today = new Date();
     const expirationDate = new Date(today);
-    console.log(today);
     expirationDate.setDate(today.getDate() + 1);
-    console.log(expirationDate);
 
     return jwt.sign({
         email: this.email,

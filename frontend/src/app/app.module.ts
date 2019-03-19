@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CookieService } from 'ngx-cookie-service';
 
 // Components
 import { AlertComponent } from './directives/alert.component';
@@ -33,11 +34,12 @@ import { AppComponent } from './app.component';
 
 const appRoutes: Routes = [
   { path: 'beacon', component: BeaconManagerPageComponent },
-  { path: 'profile', component: ProfilePageComponent },
+  { path: 'profile/:id',  component: ProfilePageComponent },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
-  { path: '', component: LandingPageComponent, pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent, pathMatch: 'full' }
+  { path: 'notfound', component: PageNotFoundComponent},
+  { path: '', component: LandingPageComponent, pathMatch: 'full' }
+//   { path: '**', redirectTo: 'notfound', pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -65,6 +67,7 @@ const appRoutes: Routes = [
         AuthGuard,
         AlertService,
         AuthenticationService,
+        CookieService,
         UserService,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
