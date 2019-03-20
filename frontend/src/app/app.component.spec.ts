@@ -18,10 +18,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'BeamHubSite'`, () => {
+  it(`should have as title 'pibeac'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('BeamHubSite');
+    expect(app.title).toEqual('pibeac');
   });
 
 });
