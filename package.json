@@ -8,7 +8,7 @@
   "main": "backend/server.js",
   "scripts": {
     "start": "cd backend && npm run start",
-    "build": "cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
     "devbuild": "cd frontend && ng build",
     "fbuild": "cd frontend && npm run build",
     "test": "cd backend && npm test"
