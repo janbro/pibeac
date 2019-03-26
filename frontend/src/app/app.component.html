@@ -19,6 +19,9 @@
                 <a class="nav-link" routerLink="/profile/{{getUser()._id}}">{{getUser().name}}</a>
             </li>
             <li class="nav-item my-2 my-lg-0">
+                <a class="nav-link" routerLink="/beacons">My Beacons</a>
+            </li>
+            <li class="nav-item my-2 my-lg-0">
                 <a class="nav-link" href="/" (click)="logout()">Logout</a>
             </li>
         </ul>

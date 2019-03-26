@@ -16,6 +16,8 @@ router.route('/:id')
   .put(controller.update)
   .delete(controller.delete);
 
+// router.use('/:id', controller.authenticate);
+
 /* Beacon information
  */
 router.route('/register')
@@ -35,5 +37,6 @@ router.route('/authenticate')
   .post(controller.authenticate);
 
 router.param('id', controller.getUserById);
+router.param('id', controller.authenticate);
 
 module.exports = router;

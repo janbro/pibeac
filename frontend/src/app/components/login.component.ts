@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, retry } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
 import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from '../services/authentication.service';
@@ -73,16 +75,15 @@ export class LoginComponent implements OnInit {
 
         this.loading = true;
         this.authenticationService.login(this.f.username.value, this.f.password.value)
-            .pipe(first())
             .subscribe(
                 data => {
                     this.authenticationService.emitLogin(true);
                     this.router.navigate([this.returnUrl], { relativeTo: this.route });
                 },
                 error => {
-                    console.log(error);
                     this.alertService.error(error);
                     this.loading = false;
                 });
     }
+
 }

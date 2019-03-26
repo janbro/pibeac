@@ -42,17 +42,22 @@ exports.register = async function(req, res) {
 }
 
 exports.authenticate = function(req, res, next) {
-    let token = JSON.parse(req.cookies['token']).token;
-    jwt.verify(token, process.env.TOKEN_SIG, function(err, decoded) {
-        if(err) {
-            res.status(400).send(err);
-        } else if(decoded) {
-            // Token valid
-            return next();
-        } else {
-            res.status(403).send('Not authenticated!');
-        }
-    });
+    try {
+        let token = JSON.parse(req.cookies['token']).token;
+        decodeToken(token, function(err, decoded) {
+            if(err) {
+                res.status(400).send(err);
+            } else if(decoded) {
+                // Token valid
+                return next();
+            } else {
+                res.status(403).send('Not authenticated!');
+            }
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(403).send("Not authenticated!");
+    }
 }
 
 exports.login = function(req, res) {
@@ -67,7 +72,7 @@ exports.login = function(req, res) {
             res.cookie('token', JSON.stringify({ id: user.id, token: user.generateJWT() }));
             res.status(200).send({_id:user._id, username: user.username, name: user.name, email: user.email});
         } else {
-            res.status(403).send('Incorrect user or password');
+            res.status(401).send('Incorrect user or password');
         }
     });
 }
@@ -129,3 +134,7 @@ exports.getUserById = function(req, res, next, id) {
         next();
     });
 };
+
+decodeToken = function(token, callback) {
+    return jwt.verify(token, process.env.TOKEN_SIG, callback);
+}

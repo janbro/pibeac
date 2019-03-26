@@ -4,9 +4,12 @@ var mongoose = require('mongoose'),
     jwt = require('jsonwebtoken'),
     Schema = mongoose.Schema;
 
+var ObjectId = mongoose.Schema.Types.ObjectId;
+
 /* Create your schema */
 var UserSchema = new Schema(
     {
+        "_id": ObjectId,
         "name": {
             type: String,
             required: true

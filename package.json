@@ -9,6 +9,8 @@
   "scripts": {
     "start": "cd backend && npm run start",
     "build": "cd frontend && npm install && cd ../backend && npm install",
+    "devbuild": "cd frontend && ng build",
+    "fbuild": "cd frontend && npm run build",
     "test": "cd backend && npm test"
   },
   "repository": {

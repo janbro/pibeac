@@ -7,6 +7,7 @@ import config from '../helpers/config';
 @Injectable()
 export class UserService {
     userChange: Subject<any> = new Subject<any>();
+    userChanged$ = this.userChange.asObservable();
     user;
 
     constructor(private http: HttpClient) {
@@ -24,13 +25,18 @@ export class UserService {
     }
 
     updateUser(id) {
-        return this.http.get(`${config.apiUrl}/users/` + id)
+        this.http.get(`${config.apiUrl}/users/` + id)
             .subscribe(
                 data => {
-                    this.userChange.next(data);
+                    if (data) {
+                        this.userChange.next(data);
+                    } else {
+                        return false;
+                    }
                 },
                 error => {
                     console.log(error);
+                    return false;
                 }
             );
     }
