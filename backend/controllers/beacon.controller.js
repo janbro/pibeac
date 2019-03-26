@@ -17,6 +17,22 @@ exports.list = function(req, res) {
     });
 };
 
+// Returns all beacon data
+exports.getBeacons = function(req, res) {
+    let userId = JSON.parse(req.cookies['token']).id;
+    Beacon.find({"owner": userId}).sort({}).exec((err, docs) =>{
+        if(err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+        res.json(docs);
+    });
+};
+
+exports.returnBeacon = function(req, res) {
+    res.status(200).send(req.beacon);
+}
+
 // Returns beacon data of passed i
 exports.getBeaconById = function(req, res, next, id) {
     Beacon.findOne({id: id}).exec((err, beacon) =>{
@@ -26,5 +42,16 @@ exports.getBeaconById = function(req, res, next, id) {
         }
         req.beacon = beacon;
         next();
+    });
+};
+
+// Returns beacon data of passed i
+exports.updateBeaconById = function(req, res, next, id) {
+    Beacon.findByIdAndUpdate(id, req.body.beacon).exec((err, beacon) =>{
+        if(err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+        res.status(200).send("Updated");
     });
 };

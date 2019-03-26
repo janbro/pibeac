@@ -1,25 +1,26 @@
 /* Dependencies */
 var express = require('express'), 
     router = express.Router(),
-    controller = require('../controllers/beacon.controller.js');
+    controller = require('../controllers/beacon.controller.js'),
+    userController = require('../controllers/user.controller.js');
 
 /* 
   These method calls are responsible for routing requests to the correct request handler.
   Take note that it is possible for different controller functions to handle requests to the same route.
  */
 router.route('/')
-  .get(controller.list);
+  .get(controller.getBeacons);
   //.post();
 
 
 /* Beacon information
  */
 router.route('/:id')
-  .get(controller.read);
+  .get(controller.returnBeacon);
   // ADMIN ROUTES
   // .put(controller.update)
   // .delete(controller.delete);
-
+router.use('/:id', userController.authenticate);
 
 router.param('id', controller.getBeaconById);
 

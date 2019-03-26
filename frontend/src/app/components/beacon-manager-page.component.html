@@ -1,0 +1,60 @@
+<div class="container">
+    <h1 class="pt-3">My Beacons</h1>
+    <div class="accordion" id="accordion">
+        <div class="card" *ngFor="let beacon of beacons; let i = index">
+            <div class="card-header" id="heading{{i}}">
+                <h5 class="mb-0 row">
+                    <div class="col-10">
+                        <h3 data-toggle="collapse" attr.data-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}">
+                            {{beacon.name}}
+                        </h3>
+                        <h5 class="text-secondary btn-link">
+                            {{beacon.action.value}}
+                        </h5>
+                    </div>
+                    <div class="col-2">
+                        <div class="action-icon">
+                            <a class="btn {{beacon.action.kind | action}} fa-2x" style="padding-top:15px;border:0px;" data-toggle="collapse" attr.data-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}"></a>
+                        </div>
+                    </div>
+                </h5>
+            </div>
+        
+            <div id="collapse{{i}}" class="collapse" attr.aria-labelledby="heading{{i}}" data-parent="#accordion">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <form>
+                                <div class="form-group row align-items-center">
+                                    <div class="col-6">
+                                        <label for="inputName">Name</label>
+                                        <input class="form-control" id="inputName" placeholder="Name" value="{{beacon.name}}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="inputName">ID</label>
+                                        <input class="form-control" id="inputId" placeholder="0x000..." value="{{beacon.id}}" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row align-items-center">
+                                    <div class="col-2 col-sm-3">
+                                        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Action</label>
+                                        <select class="custom-select" id="inlineFormCustomSelect">
+                                            <option selected>{{beacon.action.kind | action:true}}</option>
+                                            <ng-container *ngFor="let action of filter(actions(), beacon.action.kind); let i = index">
+                                                <option value="{{i}}">{{action}}</option>
+                                            </ng-container>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="sr-only" for="inlineFormInputName">Value</label>
+                                        <input type="text" class="form-control" id="inlineFormInputName" placeholder="value" value="{{beacon.action.value}}">
+                                    </div>
+                                </div>
+                            </form>     
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

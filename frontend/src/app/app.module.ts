@@ -21,6 +21,7 @@ import { RegisterPageComponent } from './components/register-page.component';
 // Services
 import { AlertService } from './services/alert.service';
 import { AuthenticationService } from './services/authentication.service';
+import { BeaconService } from './services/beacon.service';
 import { UserService } from './services/user.service';
 
 // Guards
@@ -30,10 +31,13 @@ import { AuthGuard } from './guards/auth.guard';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
+// Pipes
+import { ActionPipe } from './pipes/action.pipe';
+
 import { AppComponent } from './app.component';
 
 const appRoutes: Routes = [
-  { path: 'beacon', component: BeaconManagerPageComponent },
+  { path: 'beacons', component: BeaconManagerPageComponent },
   { path: 'profile/:id',  component: ProfilePageComponent },
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
@@ -43,18 +47,19 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AlertComponent,
-    BeaconManagerPageComponent,
-    LandingPageComponent,
-    LoginComponent,
-    LoginPageComponent,
-    PageNotFoundComponent,
-    ProfilePageComponent,
-    RegisterComponent,
-    RegisterPageComponent
-  ],
+    declarations: [
+        AppComponent,
+        ActionPipe,
+        AlertComponent,
+        BeaconManagerPageComponent,
+        LandingPageComponent,
+        LoginComponent,
+        LoginPageComponent,
+        PageNotFoundComponent,
+        ProfilePageComponent,
+        RegisterComponent,
+        RegisterPageComponent
+    ],
     imports: [
         BrowserModule,
         FormsModule,
@@ -67,6 +72,7 @@ const appRoutes: Routes = [
         AuthGuard,
         AlertService,
         AuthenticationService,
+        BeaconService,
         CookieService,
         UserService,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

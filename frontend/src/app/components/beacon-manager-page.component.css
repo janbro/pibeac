@@ -1,0 +1,12 @@
+.action-icon {
+    border: black;
+    border-style: solid;
+    display: inline-block;
+    border-radius: 100px;
+    border-width: 5px;
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    color: dodgerblue;
+    border-color: dodgerblue;
+}
