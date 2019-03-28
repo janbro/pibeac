@@ -1,8 +1,8 @@
 export class Beacon {
-    _id: string;
+    _id?: string;
     id: number;
     name: string;
-    owner: string;
+    owner?: string;
     action: {
         kind: number;
         value: string;

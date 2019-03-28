@@ -1,12 +1,15 @@
 .action-icon {
-    border: black;
+    position: absolute;
+    width: inherit;
+    height: inherit;
     border-style: solid;
-    display: inline-block;
     border-radius: 100px;
     border-width: 5px;
+    text-align: center;
+}
+
+.icon-container {
     width: 80px;
     height: 80px;
-    text-align: center;
-    color: dodgerblue;
-    border-color: dodgerblue;
+    display: inline-block;
 }
