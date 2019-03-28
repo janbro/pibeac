@@ -6,6 +6,7 @@
     "devstart": "ng serve",
     "start": "node server.js",
     "build": "ng build --aot --prod",
+    "devbuild": "ng build --watch",
     "test": "ng test --watch=false --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
