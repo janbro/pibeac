@@ -49,13 +49,13 @@ exports.authenticate = function(req, res, next) {
                 res.status(400).send(err);
             } else if(decoded) {
                 // Token valid
-                return next();
+                next();
             } else {
-                res.status(403).send('Not authenticated!');
+                res.status(403).redirect('/');
             }
         });
     } catch(err) {
-        console.log(err);
+        // console.log(err);
         res.status(403).send("Not authenticated!");
     }
 }

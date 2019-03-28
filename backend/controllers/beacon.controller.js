@@ -12,8 +12,9 @@ exports.list = function(req, res) {
         if(err) {
             console.log(err);
             res.status(400).send(err);
+        } else {
+            res.json(docs);
         }
-        res.json(docs);
     });
 };
 
@@ -25,7 +26,9 @@ exports.getBeacons = function(req, res) {
             console.log(err);
             res.status(400).send(err);
         }
-        res.json(docs);
+        else {
+            res.json(docs);
+        }
     });
 };
 
@@ -46,12 +49,34 @@ exports.getBeaconById = function(req, res, next, id) {
 };
 
 // Returns beacon data of passed i
-exports.updateBeaconById = function(req, res, next, id) {
-    Beacon.findByIdAndUpdate(id, req.body.beacon).exec((err, beacon) =>{
+exports.updateBeaconById = function(req, res) {
+    Beacon.findOneAndUpdate({ id: req.beacon.id}, { $set: req.body }).exec((err, beacon) =>{
         if(err) {
             console.log(err);
             res.status(400).send(err);
+        } else {
+            res.json("Updated");
         }
-        res.status(200).send("Updated");
     });
 };
+
+exports.ownsBeacon = function(req, res, next) {
+    try {
+        let id = JSON.parse(req.cookies['token']).id;
+        Beacon.findOne({ id: req.beacon.id}).exec((err, beacon) => {
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                if(beacon.owner === id) {
+                    next();
+                } else {
+                    res.status(403).send("Not authorized!");
+                }
+            }
+        })
+    } catch(err) {
+        // console.log(err);
+        res.status(403).send("Not authenticated!");
+    }
+}

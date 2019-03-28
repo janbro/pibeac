@@ -2,23 +2,26 @@
 var mongoose = require('mongoose'), 
     Schema = mongoose.Schema;
 
+var ObjectId = mongoose.Schema.Types.ObjectId;
+
 /* Create your schema */
 var BeaconSchema = new Schema(
     {
-      "id": String,
-      "action": {
-        "value": String,
+        "_id": ObjectId,
+        "id": String,
         "name": String,
-        "kind": Number
-      },
-      "location": {
-        "latitude": Number,
-        "longitude": Number
-      },
-      "owner": String
-  }, {
-    collection: "Beacons"
-  }
+        "owner": String,
+        "action": {
+            "value": String,
+            "kind": Number
+        }
+    //   "location": {
+    //     "latitude": Number,
+    //     "longitude": Number
+    //   },
+    }, {
+        collection: "Beacons"
+    }
 );
 
 /* create a 'pre' function that adds the updated_at (and created_at if not already there) property */
