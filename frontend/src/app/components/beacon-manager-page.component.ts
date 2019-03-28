@@ -102,7 +102,6 @@ export class BeaconManagerPageComponent implements OnInit {
             error => {
                 this.alertService.error(error);
                 this.loading = false;
-                console.log(error);
             });
     }
 

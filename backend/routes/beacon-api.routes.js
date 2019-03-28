@@ -1,7 +1,8 @@
 /* Dependencies */
 var express = require('express'), 
     router = express.Router(),
-    controller = require('../controllers/beacon.controller.js');
+    controller = require('../controllers/beacon.controller.js'),
+    userController = require('../controllers/user.controller.js');
 
 /* 
   These method calls are responsible for routing requests to the correct request handler.
@@ -16,12 +17,12 @@ router.route('/')
  */
 router.route('/:id')
   .get(controller.returnBeacon)
+  .patch(userController.authenticate)
   .patch(controller.ownsBeacon)
   .patch(controller.updateBeaconById);
   // ADMIN ROUTES
   //.delete(controller.delete);
 
 router.param('id', controller.getBeaconById);
-
 
 module.exports = router;

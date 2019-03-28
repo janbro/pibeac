@@ -20,16 +20,20 @@ exports.list = function(req, res) {
 
 // Returns all beacon data
 exports.getBeacons = function(req, res) {
-    let userId = JSON.parse(req.cookies['token']).id;
-    Beacon.find({"owner": userId}).sort({}).exec((err, docs) =>{
-        if(err) {
-            console.log(err);
-            res.status(400).send(err);
-        }
-        else {
-            res.json(docs);
-        }
-    });
+    try {
+        let userId = JSON.parse(req.cookies['token']).id;
+        Beacon.find({"owner": userId}).sort({}).exec((err, docs) =>{
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            }
+            else {
+                res.json(docs);
+            }
+        });
+    } catch(err) {
+        res.status(403).send("Not authenticated!");
+    }
 };
 
 exports.returnBeacon = function(req, res) {

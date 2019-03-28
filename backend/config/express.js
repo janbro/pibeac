@@ -35,7 +35,7 @@ module.exports.init = function() {
     app.use('/notfound', express.static(path.resolve(__clientdir)));
 
     // Garages endpoint
-    app.use('/api/beacons', UserController.authenticate, BeaconRouter);
+    app.use('/api/beacons', BeaconRouter);
 
     // User endpoint
     app.use('/api/users', UserRouter);

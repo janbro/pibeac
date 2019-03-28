@@ -45,17 +45,20 @@ exports.authenticate = function(req, res, next) {
     try {
         let token = JSON.parse(req.cookies['token']).token;
         decodeToken(token, function(err, decoded) {
-            if(err) {
-                res.status(400).send(err);
+            if(err instanceof SyntaxError) {
+                res.status(403).send("Incorrect credentials!");
+            } else if(err) {
+                console.log(err);
+                res.status(400).send("Something went wrong!");
             } else if(decoded) {
                 // Token valid
                 next();
             } else {
-                res.status(403).redirect('/');
+                res.status(403).send("Not authenticated!");
             }
         });
     } catch(err) {
-        res.status(401).send("Not authenticated!");
+        res.status(403).send("Not authenticated!");
     }
 }
 
@@ -63,7 +66,6 @@ exports.login = function(req, res) {
     User.findOne({'username': req.body.username}).exec((err, doc) =>{
         let user = new User(doc);
         if(err) {
-            console.log(err);
             res.status(400).send(err);
         } else if(doc === null) {
             res.status(400).send('User does not exist!');
@@ -134,6 +136,12 @@ exports.getUserById = function(req, res, next, id) {
     });
 };
 
+/**
+ * Decodes jwt token with process env signature
+ *
+ * @param token JWT Token
+ * @param callback Callback function
+ */
 decodeToken = function(token, callback) {
     return jwt.verify(token, process.env.TOKEN_SIG, callback);
 }

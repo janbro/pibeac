@@ -6,10 +6,15 @@ import config from '../helpers/config';
 
 @Injectable()
 export class UserService {
-    user: Subject<any> = new Subject<any>();
-    userChanged$ = this.user.asObservable();
+    change: Subject<any> = new Subject<any>();
+    updated$ = this.change.asObservable();
+    user;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        this.change.subscribe((value) => {
+            this.user = value;
+        });
+    }
 
     /**
      * Sets the beacons object and triggers the change event
@@ -17,7 +22,7 @@ export class UserService {
      * @param user New user object
      */
     setUser(user) {
-        this.user.next(user);
+        this.change.next(user);
     }
 
     /**
@@ -31,7 +36,7 @@ export class UserService {
      * Sets the user to undefined
      */
     clearUser() {
-        this.user.next(undefined);
+        this.change.next(undefined);
     }
 
     /**
@@ -47,11 +52,13 @@ export class UserService {
                     if (data) {
                         this.setUser(data);
                     } else {
+                        this.clearUser();
                         return false;
                     }
                 },
                 error => {
                     console.log(error);
+                    this.clearUser();
                     return false;
                 }
             );

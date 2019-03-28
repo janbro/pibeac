@@ -44,7 +44,9 @@ export class AppComponent implements OnInit {
         try {
             this.token = JSON.parse(this.cookie.get('token'));
             this.userService.updateUser(this.token.id);
-        } catch (err) { }
+        } catch (err) {
+            this.userService.clearUser();
+        }
     }
 
     /**

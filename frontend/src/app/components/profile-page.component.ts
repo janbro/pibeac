@@ -15,7 +15,7 @@ export class ProfilePageComponent implements OnInit {
         private router: Router,
         private userService: UserService) {
 
-        userService.userChanged$.subscribe(success => {
+        userService.updated$.subscribe(success => {
             if (!success) {
                 router.navigateByUrl('/');
             }
