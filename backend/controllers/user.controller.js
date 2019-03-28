@@ -55,8 +55,7 @@ exports.authenticate = function(req, res, next) {
             }
         });
     } catch(err) {
-        // console.log(err);
-        res.status(403).send("Not authenticated!");
+        res.status(401).send("Not authenticated!");
     }
 }
 

@@ -11,7 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "compodoc": "npx compodoc -p src/tsconfig.app.json -d docs/ --theme Readthedocs",
-    "servedocs": "compodoc -s"
+    "servedocs": "compodoc -s -d docs"
   },
   "repository": {
     "type": "git",

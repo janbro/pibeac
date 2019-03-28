@@ -14,9 +14,11 @@ export class ErrorInterceptor implements HttpInterceptor {
     /**
      * Intercepts all incoming http responses and packages error for user notifications
      *
-     * 0: Connection refused
-     * 400: Server error, logout and redirect
-     * 403: Forbidden, logout and redirect
+     * `0: Connection refused`
+     *
+     * `400: Bad request, logout and redirect`
+     *
+     * `403: Forbidden, logout and redirect`
      *
      * @param request Http Request Object
      * @param next Next http target
@@ -30,15 +32,15 @@ export class ErrorInterceptor implements HttpInterceptor {
             } else if (error.status === 0) {
                 return throwError('Connection refused! Check your internet connection.');
             } else if (error.status === 400) {
+                // Bad request was made
                 this.authenticationService.logout();
                 this.router.navigate(['/']);
                 return throwError('Something went wrong!');
             } else if (error.status === 401) {
-                // auto logout if 401 response returned from api
-                // this.authenticationService.logout();
-                // location.reload(true);
+                // The user could not be authorized
                 return throwError(error.error);
             } else if (error.status === 403) {
+                // The user should not try this action, redirect to homepage
                 this.authenticationService.logout();
                 this.router.navigate(['/']);
                 return throwError('Not authenticated!');
