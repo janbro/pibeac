@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
 
     /**
      * Convenience getter for easy access to form fields
-     * */
+     */
     get f() { return this.registerForm.controls; }
 
     /**

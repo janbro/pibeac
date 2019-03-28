@@ -22,12 +22,15 @@ export class ProfilePageComponent implements OnInit {
         });
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         try {
             this.userService.updateUser(JSON.parse(this.cookie.get('token')).id);
         } catch (err) { this.router.navigateByUrl('/'); }
     }
 
+    /**
+     * Returns the currently logged in user
+     */
     getUser() {
         return this.userService.getUser();
     }
