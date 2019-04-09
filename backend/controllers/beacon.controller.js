@@ -1,5 +1,6 @@
 /* Dependencies */
 var Beacon = require('../models/beacon.model.js');
+var User = require('../models/user.model.js');
 
 exports.read = function(req, res) {
     /* send back the beacons as json from the request */
@@ -19,16 +20,30 @@ exports.list = function(req, res) {
 };
 
 // Returns all beacon data
-exports.getBeacons = function(req, res) {
+exports.getBeacons = async function(req, res) {
     try {
         let userId = JSON.parse(req.cookies['token']).id;
-        Beacon.find({"owner": userId}).sort({}).exec((err, docs) =>{
+
+        User.findOne({"_id": userId}).exec(async (err, docs) => {
             if(err) {
                 console.log(err);
                 res.status(400).send(err);
             }
             else {
-                res.json(docs);
+                beaconGroups = await Promise.all(docs.beaconGroups.map(async (group) => {
+                    beacons = await Promise.all(group.beacons.map(async (beaconId) => {
+                        try {
+                            beacon = await Beacon.findOne({"_id": beaconId}).exec();
+                            return beacon;
+                        }
+                        catch(err) {
+                            console.log(err);
+                            return false;
+                        }
+                    }));
+                    return { name: group.name, beacons: beacons };
+                }));
+                res.status(200).send(beaconGroups);
             }
         });
     } catch(err) {

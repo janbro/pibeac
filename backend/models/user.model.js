@@ -32,7 +32,10 @@ var UserSchema = new Schema(
             required: true,
             unique: true
         },
-        "ownedBeacons": [String]
+        "beaconGroups": [{
+            "name": String,
+            "beacons": [String]
+        }]
   }, {
     collection: "Users"
   }

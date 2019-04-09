@@ -3,5 +3,8 @@ export class User {
     username: string;
     name: string;
     email: string;
-    beacons: [string];
+    beaconGroups?: [{
+        name: string,
+        beacons: [string]
+    }];
 }

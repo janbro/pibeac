@@ -21,8 +21,8 @@ export class BeaconService {
     /**
      * Sets the beacons object and triggers the update event
      */
-    setBeacons(user) {
-        this.beacons.next(user);
+    setBeacons(beacons) {
+        this.beacons.next(beacons);
     }
 
     /**

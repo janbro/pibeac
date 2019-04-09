@@ -11,7 +11,6 @@ exports.read = function(req, res) {
 exports.list = function(req, res) {
     User.find({}).sort({}).exec((err, docs) =>{
         if(err) {
-            console.log(err);
             res.status(400).send(err);
         }
         res.json(docs);
@@ -32,7 +31,6 @@ exports.register = async function(req, res) {
         user.setPassword(req.body.password);
         user.save((err) => {
             if(err) {
-                console.log(err);
                 res.status(400).send(err);
             } else {
                 res.status(200).send(user);
@@ -48,7 +46,6 @@ exports.authenticate = function(req, res, next) {
             if(err instanceof SyntaxError) {
                 res.status(403).send("Incorrect credentials!");
             } else if(err) {
-                console.log(err);
                 res.status(400).send("Something went wrong!");
             } else if(decoded) {
                 // Token valid
@@ -70,10 +67,17 @@ exports.login = function(req, res) {
         } else if(doc === null) {
             res.status(400).send('User does not exist!');
         } else if(user.validatePassword(req.body.password)) {
-            res.cookie('token', JSON.stringify({ id: user.id, token: user.generateJWT() }));
-            res.status(200).send({_id:user._id, username: user.username, name: user.name, email: user.email});
+            userToken = undefined;
+            try {
+                userToken = user.generateJWT();
+                res.cookie('token', JSON.stringify({ id: user.id, token: userToken }));
+                res.status(200).send({_id:user._id, username: user.username, name: user.name, email: user.email});
+            } catch(err) {
+                console.log(err);
+                res.status(500).send('Token could not be signed!');
+            }
         } else {
-            res.status(401).send('Incorrect user or password');
+            res.status(401).send('Incorrect user or password!');
         }
     });
 }
@@ -135,6 +139,118 @@ exports.getUserById = function(req, res, next, id) {
         next();
     });
 };
+
+exports.getGroupName = function(req, res, next, groupname) {
+    req.groupname = groupname;
+    next();
+}
+
+/**
+ * Beacon Group Functions
+ */
+exports.addGroup = function(req, res) {
+    console.log(req.body.name);
+    let name = req.body.name;
+    try {
+        let id = JSON.parse(req.cookies['token']).id;
+        let newgroup = { name: name, beacons: [] };
+        console.log(newgroup);
+        User.findOneAndUpdate({'_id': id}, { "$push": { beaconGroups: newgroup }}).exec((err, docs) => {
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                res.status(200).send({text:"Added group!"});
+            }
+        });
+    } catch(err) {
+        res.status(400).send({error:"Cannot add group"});
+    }
+}
+
+/**
+ * Beacon Group Functions
+ */
+exports.deleteGroup = function(req, res) {
+    try {
+        let id = JSON.parse(req.cookies['token']).id;
+        User.findOneAndUpdate({'_id': id },
+        { '$pull': {
+            beaconGroups: {
+                name: req.groupname
+            }
+        }}).exec((err, docs) => {
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                res.status(200).send({text: "Deleted group " + req.groupname});
+            }
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(400).send({error:"Cannot delete group"});
+    }
+}
+
+/**
+ * Updates the order of beacons in a group
+ */
+exports.updateBeaconOrder = function(req, res) {
+    let name = req.body.name;
+    let beacon_ids = req.body.beacon_ids;
+    try {
+        let id = JSON.parse(req.cookies['token']).id;
+        User.findOneAndUpdate({'_id': id, 'beaconGroups.name':name},
+        { '$set': {
+            'beaconGroups.$.beacons': beacon_ids
+        }}).exec((err, docs) => {
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                res.status(200).send({text:"reordered"});
+            }
+        });
+    } catch(err) {
+        res.status(400).send({error:"Cannot order beacons"});
+    }
+}
+
+/**
+ * Update assigned beaon group
+ */
+exports.updateBeaconGroup = function(req, res) {
+    let beacon_id = req.body.beacon_id;
+    let groupname = req.body.groupname;
+    let oldgroupname = req.body.oldgroupname;
+    try {
+        let id = JSON.parse(req.cookies['token']).id;
+        User.findOneAndUpdate({'beaconGroups.name':groupname},
+        { '$push': {
+            'beaconGroups.$.beacons': beacon_id
+        }}).exec((err, docs) => {
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                User.findOneAndUpdate({'beaconGroups.name':oldgroupname},
+                { '$pull': {
+                    'beaconGroups.$.beacons': beacon_id
+                }}).exec((err, docs) => {
+                    if(err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    } else {
+                        res.status(200).send({text:"reordered"});
+                    }
+                });
+            }
+        });
+    } catch(err) {
+        res.status(400).send({error:"Cannot order beacons"});
+    }
+}
 
 /**
  * Decodes jwt token with process env signature

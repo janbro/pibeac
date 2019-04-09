@@ -64,6 +64,23 @@ export class UserService {
             );
     }
 
+    updateBeaconOrder(group) {
+        return this.http.put(`${config.apiUrl}/users/beacons/` + group.name, group);
+    }
+
+    updateBeaconGroup(beacon_id, groupname, oldgroupname) {
+        return this.http.put(`${config.apiUrl}/users/beacons/` + groupname + '/' + beacon_id,
+            { 'beacon_id': beacon_id, 'groupname': groupname, 'oldgroupname': oldgroupname });
+    }
+
+    addGroup(groupname) {
+        return this.http.post(`${config.apiUrl}/users/beacons/` + groupname, { name: groupname });
+    }
+
+    deleteGroup(groupname) {
+        return this.http.delete(`${config.apiUrl}/users/beacons/` + groupname);
+    }
+
     /**
      * Returns all users
      */

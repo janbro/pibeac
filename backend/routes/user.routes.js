@@ -12,9 +12,9 @@ router.route('/')
   //.post();
 
 router.route('/:id')
-  .get(controller.getUser)
-  .put(controller.update)
-  .delete(controller.delete);
+  .get(controller.getUser);
+//   .put(controller.update)
+//   .delete(controller.delete);
 
 // router.use('/:id', controller.authenticate);
 
@@ -33,10 +33,20 @@ router.get('/logout', function(req, res, next) {
     res.redirect('/');
 });
 
+router.route('/beacons/:groupname')
+  .post(controller.addGroup)
+  .put(controller.updateBeaconOrder)
+  .delete(controller.deleteGroup);
+
+router.route('/beacons/:groupname/:beaconid')
+  .put(controller.updateBeaconGroup);
+
 router.route('/authenticate')
   .post(controller.authenticate);
 
 router.param('id', controller.getUserById);
 router.param('id', controller.authenticate);
+router.param('groupname', controller.getGroupName);
+router.param('groupname', controller.authenticate);
 
 module.exports = router;
