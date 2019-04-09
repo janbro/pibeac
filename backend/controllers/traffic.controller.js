@@ -13,23 +13,42 @@ exports.list = function(req, res) {
         if(err) {
             res.status(400).send(err);
         } else {
-            res.json(docs);
+            res.status(200).json(docs);
         }
     });
 };
 
 exports.getTrafficByBeaconId = function(req, res) {
-    Traffic.find({"beacon_id": req.beacon_id}).sort('time').exec((err, docs) =>{ 
-        if(err) {
-            res.status(400).send(err);
-        } else {
-            res.json(docs);
-        }
-    });
+    let min = req.query.min;
+    let max = req.query.max
+    if (min && max) {
+        Traffic.find({"beacon_id": req.beacon_id, "time": { $gt : min, $lt : max}}).sort('time').exec((err, docs) =>{ 
+            if(err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(docs);
+            }
+        });
+    } else if (min) {
+        Traffic.find({"beacon_id": req.beacon_id, "time": { $gt : min }}).sort('time').exec((err, docs) =>{ 
+            if(err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(docs);
+            }
+        });
+    } else {
+        Traffic.find({"beacon_id": req.beacon_id}).sort('time').exec((err, docs) =>{ 
+            if(err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(docs);
+            }
+        });
+    }
 }
 
 exports.addTrafficByBeaconId = function(req, res) {
-    console.log(req.body);
     var traffic = new Traffic(req.body);
     traffic.beacon_id = req.beacon_id;
     traffic.save(function (err) {

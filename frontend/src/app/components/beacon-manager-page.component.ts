@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { Label } from 'ng2-charts';
+
 import { ActionPipe } from '../pipes/action.pipe';
 import { AlertService } from '../services/alert.service';
 import { BeaconService } from '../services/beacon.service';
@@ -42,6 +45,32 @@ import { catchError } from 'rxjs/operators';
     ]
 })
 export class BeaconManagerPageComponent implements OnInit {
+
+    public chartOptions: ChartOptions = {
+        responsive: true,
+        // We use these empty structures as placeholders for dynamic theming.
+        scales: { xAxes: [{}], yAxes: [{}] },
+        plugins: {
+            datalabels: {
+                anchor: 'end',
+                align: 'end',
+            }
+        }
+    };
+
+    public chartLabels: Label[] = [];
+    public chartType: ChartType = 'line';
+    public chartLegend = true;
+
+    /**
+     * Traffic data for each beacon
+     */
+    graphdata;
+
+    /**
+     * Currently showing graph data
+     */
+    graph;
 
     /**
      * Beacons owned by user
@@ -92,6 +121,41 @@ export class BeaconManagerPageComponent implements OnInit {
         beaconService.updated$.subscribe(_groups => {
             setTimeout(async () => {
                 this.groups = _groups;
+                this.graphdata = {};
+                this.chartLabels = [];
+                this.groups.forEach((group) => {
+                    group.beacons.forEach((beacon) => {
+                        const date = new Date();
+                        date.setHours(date.getHours() - 1);
+                        console.log(date);
+                        console.log(date.getTime());
+                        beaconService.getTrafficByMin(beacon.id, date.getTime()).subscribe(
+                            data => {
+                                let d: any;
+                                d = data;
+                                let time = 0;
+                                this.chartLabels = [];
+                                const traffic = d.reverse().map((tr) => {
+                                    this.chartLabels.unshift(`${time}`);
+                                    time += 1;
+                                    return tr['detected_dev_dists']['length'];
+                                });
+                                while (traffic.length < 60) {
+                                    this.chartLabels.unshift(`${time}`);
+                                    time += 1;
+                                    traffic.unshift(0);
+                                }
+                                this.graphdata[beacon.id] = {
+                                    data: traffic,
+                                    label: '# of devices'
+                                };
+                            },
+                            error => {
+                                console.log(error);
+                                this.alertService.error(error);
+                            });
+                    });
+                });
                 if (this.group === undefined || this.group.name === '') {
                     this.loadBeacons(this.groups[0]);
                 } else {
@@ -113,6 +177,12 @@ export class BeaconManagerPageComponent implements OnInit {
 
     ngOnInit() {
         this.beaconService.updateBeacons();
+    }
+
+    getData(beacon_id) {
+        return [{ data: this.graphdata[beacon_id].map((tr) => {
+            return tr.detected_dev_dists.length;
+        }), label: 'minutes'}];
     }
 
     /**

@@ -136,6 +136,21 @@
                                     </div>
                                 </div>
                             </form>
+
+                            <div class="graph-container" *ngIf="graphdata && graphdata[beacon.id] && graphdata[beacon.id].data.length > 0">
+                                <div class="flex">
+                                    <div class="flex-item">
+                                        <div style="display: block;">
+                                        <canvas baseChart width="400" height="200"
+                                                    [datasets]="[graphdata[beacon.id]]"
+                                                    [labels]="chartLabels"
+                                                    [options]="chartOptions"
+                                                    [legend]="chartLegend"
+                                                    [chartType]="chartType"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>

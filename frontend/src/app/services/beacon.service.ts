@@ -47,6 +47,17 @@ export class BeaconService {
             );
     }
 
+    getTrafficById(id) {
+        return this.http.get(`${config.apiUrl}/traffic/${id}`);
+    }
+
+    getTrafficByMin(id, min) {
+        return this.http.get(`${config.apiUrl}/traffic/${id}?min=${min}`);
+    }
+
+    getTrafficByMinMax(id, min, max) {
+        return this.http.get(`${config.apiUrl}/traffic/${id}?min=${min}&max=${max}`);
+    }
     /**
      * Returns the beacon information for passed id
      *

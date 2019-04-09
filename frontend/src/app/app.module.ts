@@ -8,6 +8,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import { ChartsModule } from 'ng2-charts';
 
 // Components
 import { AlertComponent } from './directives/alert.component';
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        ChartsModule,
         DragDropModule,
         FormsModule,
         HttpClientModule,
