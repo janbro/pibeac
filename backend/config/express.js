@@ -6,8 +6,8 @@ var path = require('path'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     config = require('./config'),
-    UserController = require('../controllers/user.controller.js'),
     BeaconRouter = require('../routes/beacon-api.routes'),
+    TrafficRouter = require('../routes/traffic.routes'),
     UserRouter = require('../routes/user.routes');
 const cors = require('cors');
 
@@ -39,6 +39,9 @@ module.exports.init = function() {
 
     // User endpoint
     app.use('/api/users', UserRouter);
+
+    // Traffic endpoint
+    app.use('/api/traffic', TrafficRouter);
 
     // Catch all other routes and return the index file
     app.get('*', (req, res) => {

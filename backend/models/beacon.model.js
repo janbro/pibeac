@@ -14,6 +14,10 @@ var BeaconSchema = new Schema(
         "action": {
             "value": String,
             "kind": Number
+        },
+        "distance": {
+            type: Number,
+            optional: true
         }
     //   "location": {
     //     "latitude": Number,

@@ -57,13 +57,21 @@ exports.returnBeacon = function(req, res) {
 
 // Returns beacon data of passed i
 exports.getBeaconById = function(req, res, next, id) {
+    let distance = req.query.dist;
     Beacon.findOne({id: id}).exec((err, beacon) =>{
         if(err) {
             console.log(err);
             res.status(400).send(err);
         }
-        req.beacon = beacon;
-        next();
+        if(distance && distance < beacon.distance) {
+            req.beacon = beacon;
+            next();
+        } else if(!distance) {
+            req.beacon = beacon;
+            next();
+        } else {
+            res.status(403).send({text: "User not close enough"});
+        }
     });
 };
 
