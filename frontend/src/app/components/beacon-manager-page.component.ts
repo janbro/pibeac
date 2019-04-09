@@ -127,8 +127,6 @@ export class BeaconManagerPageComponent implements OnInit {
                     group.beacons.forEach((beacon) => {
                         const date = new Date();
                         date.setHours(date.getHours() - 1);
-                        console.log(date);
-                        console.log(date.getTime());
                         beaconService.getTrafficByMin(beacon.id, date.getTime()).subscribe(
                             data => {
                                 let d: any;
@@ -140,15 +138,17 @@ export class BeaconManagerPageComponent implements OnInit {
                                     time += 1;
                                     return tr['detected_dev_dists']['length'];
                                 });
-                                while (traffic.length < 60) {
-                                    this.chartLabels.unshift(`${time}`);
-                                    time += 1;
-                                    traffic.unshift(0);
+                                if (traffic.length > 0) {
+                                    while (traffic.length < 60) {
+                                        this.chartLabels.unshift(`${time}`);
+                                        time += 1;
+                                        traffic.unshift(0);
+                                    }
+                                    this.graphdata[beacon.id] = {
+                                        data: traffic,
+                                        label: '# of devices'
+                                    };
                                 }
-                                this.graphdata[beacon.id] = {
-                                    data: traffic,
-                                    label: '# of devices'
-                                };
                             },
                             error => {
                                 console.log(error);
