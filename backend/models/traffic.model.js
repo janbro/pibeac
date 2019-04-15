@@ -12,7 +12,7 @@ var TrafficSchema = new Schema(
         "detected_dev_dists": [Number],
         expireAt: {
             type: Date,
-            default: (new Date()).setHours(new Date().getHours() - 1)
+            default: (new Date()).setHours(new Date().getHours() + 24)
         },
     }, {
         collection: "Traffic"
