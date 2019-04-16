@@ -10,6 +10,7 @@
     "start": "cd backend && npm run start",
     "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
     "install": "cd frontend && npm install && cd ../backend && npm install",
+    "compodoc": "cd frontend && npm run compodoc",
     "devbuild": "cd frontend && npm run devbuild",
     "fbuild": "cd frontend && npm run build",
     "test": "cd backend && npm test"
