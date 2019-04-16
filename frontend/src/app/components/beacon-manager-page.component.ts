@@ -11,7 +11,6 @@ import { AlertService } from '../services/alert.service';
 import { BeaconService } from '../services/beacon.service';
 import { UserService } from '../services/user.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'app-beacon-page',
@@ -55,10 +54,16 @@ export class BeaconManagerPageComponent implements OnInit {
                 anchor: 'end',
                 align: 'end',
             }
+        },
+        animation: {
+            duration: 0 // general animation time
         }
     };
 
-    public chartLabels: Label[] = [];
+    public chartLabels: Label[] = ['-59', '-58', '-57', '-56', '-55', '-54', '-53', '-52', '-51', '-50', '-49', '-48', '-47', '-46', '-45',
+                                    '-44', '-43', '-42', '-41', '-40', '-39', '-38', '-37', '-36', '-35', '-34', '-33', '-32', '-31', '-30',
+                                    '-29', '-28', '-27', '-26', '-25', '-24', '-23', '-22', '-21', '-20', '-19', '-18', '-17', '-16', '-15',
+                                    '-14', '-13', '-12', '-11', '-10', '-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', '-0'];
     public chartType: ChartType = 'line';
     public chartLegend = true;
 
@@ -112,6 +117,8 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     addgroup = false;
 
+    prevdata;
+
     constructor(private alertService: AlertService,
                 private beaconService: BeaconService,
                 private userService: UserService,
@@ -122,38 +129,9 @@ export class BeaconManagerPageComponent implements OnInit {
             setTimeout(async () => {
                 this.groups = _groups;
                 this.graphdata = {};
-                this.chartLabels = [];
                 this.groups.forEach((group) => {
                     group.beacons.forEach((beacon) => {
-                        const date = new Date();
-                        date.setHours(date.getHours() - 1);
-                        beaconService.getTrafficByMin(beacon.id, date.getTime()).subscribe(
-                            data => {
-                                let d: any;
-                                d = data;
-                                let time = 0;
-                                this.chartLabels = [];
-                                const traffic = d.reverse().map((tr) => {
-                                    this.chartLabels.unshift(`${time}`);
-                                    time += 1;
-                                    return tr['detected_dev_dists']['length'];
-                                });
-                                if (traffic.length > 0) {
-                                    while (traffic.length < 60) {
-                                        this.chartLabels.unshift(`${time}`);
-                                        time += 1;
-                                        traffic.unshift(0);
-                                    }
-                                    this.graphdata[beacon.id] = {
-                                        data: traffic,
-                                        label: '# of devices'
-                                    };
-                                }
-                            },
-                            error => {
-                                console.log(error);
-                                this.alertService.error(error);
-                            });
+                        this.getBeaconTraffic(beacon.id);
                     });
                 });
                 if (this.group === undefined || this.group.name === '') {
@@ -183,6 +161,54 @@ export class BeaconManagerPageComponent implements OnInit {
         return [{ data: this.graphdata[beacon_id].map((tr) => {
             return tr.detected_dev_dists.length;
         }), label: 'minutes'}];
+    }
+
+    getBeaconTraffic(beacon_id) {
+        const date = new Date();
+        date.setHours(date.getHours() - 1);
+        if (!this.loading) { setTimeout(function() { return this.getBeaconTraffic(beacon_id); }.bind(this), 1000 * 3); }
+        this.beaconService.getTrafficByMin(beacon_id, date.getTime()).subscribe(
+            data => {
+                let d: any;
+                d = data;
+                let time = 0;
+                const traffic = d.slice(d.length - 60 > 0 ? d.length - 60 : 0, d.length).map((tr) => {
+                    time += 1;
+                    return tr['detected_dev_dists']['length'];
+                });
+                if (traffic.length > 0) {
+                    if (JSON.stringify(this.prevdata) !== JSON.stringify(traffic) && this.graphdata[beacon_id]) {
+                        this.prevdata = traffic;
+                        while (traffic.length < 60) {
+                            time += 1;
+                            traffic.unshift(0);
+                        }
+                        this.graphdata[beacon_id] = {
+                            data: traffic,
+                            label: '# of devices'
+                        };
+                    } else if (!this.graphdata[beacon_id]) {
+                        this.prevdata = traffic;
+                        while (traffic.length < 60) {
+                            time += 1;
+                            traffic.unshift(0);
+                        }
+                        this.graphdata[beacon_id] = {
+                            data: traffic,
+                            label: '# of devices'
+                        };
+                    }
+                }
+                // tslint:disable-next-line:prefer-const
+                let tmp = [];
+                traffic.forEach((t, index) => {
+                    tmp.unshift(`${index}`);
+                });
+            },
+            error => {
+                console.log(error);
+                this.alertService.error(error);
+            });
     }
 
     /**
