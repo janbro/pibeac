@@ -76,9 +76,9 @@
             Add some beacons...
         </h2>
     </div>
-    <div cdkDropList class="accordion" (cdkDropListDropped)="drop($event)" id="accordion" [@fade-in]="beacons && !(loading && loading_id == 'group') ? 'visible' : 'invisible'">
-        <div cdkDrag class="card" id="{{beacon._id}}" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let beacon of beacons; let i = index" (click)="getBeaconTraffic(beacon.id)">
-            <div cdkDragHandle class="card-header" style="height:110px;" id="heading{{i}}">
+    <div cdkDropList class="accordion mb-5" (cdkDropListDropped)="drop($event)" id="accordion" [@fade-in]="beacons && !(loading && loading_id == 'group') ? 'visible' : 'invisible'">
+        <div cdkDrag class="card" id="{{beacon._id}}" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let beacon of beacons; let i = index">
+            <div cdkDragHandle class="card-header" style="height:110px;" id="heading{{i}}" (click)="setOpenBeacon(beacon.id);getBeaconTraffic(beacon.id);">
                 <h5 class="mb-0 row">
                     <div class="col-10">
                         <div class="row">
@@ -91,7 +91,7 @@
                         </h5>
                     </div>
                     <div class="col-2">
-                        <div class="{{beacon.action && beacon.action.kind | action:'color'}}">
+                        <div class="{{beacon.action.kind | action:'color'}}" *ngIf="beacon.action">
                             <div class="icon-container" [@fade-in]="loading_id==beacon.id"  data-toggle="collapse" attr.data-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}">
                                 <div class="action-icon" [@fade-out]="!loading || loading_id!=beacon.id ? 'visible' : 'invisible'">
                                     <a class="btn {{beacon.action.kind | action:'icon'}} fa-2x" style="padding-top:15px;border:0px;"></a>

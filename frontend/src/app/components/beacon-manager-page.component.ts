@@ -70,7 +70,7 @@ export class BeaconManagerPageComponent implements OnInit {
     /**
      * Traffic data for each beacon
      */
-    graphdata;
+    graphdata = {};
 
     /**
      * Currently showing graph data
@@ -91,6 +91,10 @@ export class BeaconManagerPageComponent implements OnInit {
      * Currently displayed beacons
      */
     beacons;
+
+    beac_id;
+
+    beacon_data_listener;
 
     /**
      * Activates input validation
@@ -128,7 +132,6 @@ export class BeaconManagerPageComponent implements OnInit {
         beaconService.updated$.subscribe(_groups => {
             setTimeout(async () => {
                 this.groups = _groups;
-                this.graphdata = {};
                 this.groups.forEach((group) => {
                     group.beacons.forEach((beacon) => {
                         this.getBeaconTraffic(beacon.id);
@@ -163,52 +166,58 @@ export class BeaconManagerPageComponent implements OnInit {
         }), label: 'minutes'}];
     }
 
+    setOpenBeacon(beacon_id) {
+        if (beacon_id !== this.beac_id) { this.beacon_data_listener = false; }
+        this.beac_id = beacon_id;
+    }
+
     getBeaconTraffic(beacon_id) {
         const date = new Date();
         date.setHours(date.getHours() - 1);
-        if (!this.loading) { setTimeout(function() { return this.getBeaconTraffic(beacon_id); }.bind(this), 1000 * 3); }
-        this.beaconService.getTrafficByMin(beacon_id, date.getTime()).subscribe(
-            data => {
-                let d: any;
-                d = data;
-                let time = 0;
-                const traffic = d.slice(d.length - 60 > 0 ? d.length - 60 : 0, d.length).map((tr) => {
-                    time += 1;
-                    return tr['detected_dev_dists']['length'];
-                });
-                if (traffic.length > 0) {
-                    if (JSON.stringify(this.prevdata) !== JSON.stringify(traffic) && this.graphdata[beacon_id]) {
-                        this.prevdata = traffic;
-                        while (traffic.length < 60) {
-                            time += 1;
-                            traffic.unshift(0);
+        if (!this.beacon_data_listener && this.beac_id === beacon_id) {
+            this.beacon_data_listener = true;
+            this.beaconService.getTrafficByMin(beacon_id, date.getTime()).subscribe(
+                data => {
+                    let d: any;
+                    d = data;
+                    let time = 0;
+                    const traffic = d.slice(d.length - 60 > 0 ? d.length - 60 : 0, d.length).map((tr) => {
+                        time += 1;
+                        return tr['detected_dev_dists']['length'];
+                    });
+                    if (traffic.length > 0) {
+                        if (JSON.stringify(this.prevdata) !== JSON.stringify(traffic) && this.graphdata[beacon_id]) {
+                            this.prevdata = traffic;
+                            while (traffic.length < 60) {
+                                time += 1;
+                                traffic.unshift(0);
+                            }
+                            this.graphdata[beacon_id] = {
+                                data: traffic,
+                                label: '# of devices'
+                            };
+                        } else if (!this.graphdata[beacon_id]) {
+                            this.prevdata = traffic;
+                            while (traffic.length < 60) {
+                                time += 1;
+                                traffic.unshift(0);
+                            }
+                            this.graphdata[beacon_id] = {
+                                data: traffic,
+                                label: '# of devices'
+                            };
                         }
-                        this.graphdata[beacon_id] = {
-                            data: traffic,
-                            label: '# of devices'
-                        };
-                    } else if (!this.graphdata[beacon_id]) {
-                        this.prevdata = traffic;
-                        while (traffic.length < 60) {
-                            time += 1;
-                            traffic.unshift(0);
-                        }
-                        this.graphdata[beacon_id] = {
-                            data: traffic,
-                            label: '# of devices'
-                        };
+                        setTimeout(function() {
+                            this.beacon_data_listener = false;
+                            this.getBeaconTraffic(beacon_id);
+                        }.bind(this), 1000 * 3);
                     }
-                }
-                // tslint:disable-next-line:prefer-const
-                let tmp = [];
-                traffic.forEach((t, index) => {
-                    tmp.unshift(`${index}`);
+                },
+                error => {
+                    console.log(error);
+                    this.alertService.error(error);
                 });
-            },
-            error => {
-                console.log(error);
-                this.alertService.error(error);
-            });
+        }
     }
 
     /**
