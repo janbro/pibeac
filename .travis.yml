@@ -12,4 +12,4 @@ deploy:
 before_install:
 - npm run build
 after_success:
-- npm run compodoc && bash ./deploy.sh
+- npm run compodoc && cd frontend && bash ./deploy.sh && cd ../
