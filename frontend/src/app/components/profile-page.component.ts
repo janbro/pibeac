@@ -5,6 +5,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 import { UserService } from '../services/user.service';
 
+/**
+ * Component for profile page
+ */
 @Component({
     selector: 'app-profile-page',
     templateUrl: './profile-page.component.html',

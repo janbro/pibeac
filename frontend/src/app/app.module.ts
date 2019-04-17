@@ -39,6 +39,9 @@ import { ActionPipe } from './pipes/action.pipe';
 
 import { AppComponent } from './app.component';
 
+/**
+ * App routes
+ */
 const appRoutes: Routes = [
   { path: 'beacons', component: BeaconManagerPageComponent },
   { path: 'profile/:id',  component: ProfilePageComponent },
@@ -49,6 +52,9 @@ const appRoutes: Routes = [
 //   { path: '**', redirectTo: 'notfound', pathMatch: 'full' }
 ];
 
+/**
+ * App module of pibeac web application
+ */
 @NgModule({
     declarations: [
         AppComponent,

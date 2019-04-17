@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
-import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 
 import { ActionPipe } from '../pipes/action.pipe';
@@ -11,6 +11,9 @@ import { BeaconService } from '../services/beacon.service';
 import { UserService } from '../services/user.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
+/**
+ * Management page for beacons a user owns
+ */
 @Component({
     selector: 'app-beacon-page',
     templateUrl: './beacon-manager-page.component.html',

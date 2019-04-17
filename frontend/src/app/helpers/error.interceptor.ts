@@ -6,6 +6,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthenticationService } from '../services/authentication.service';
 
+/**
+ * Intercepts http errors and gracefully handles them
+ */
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
     /**

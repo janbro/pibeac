@@ -6,6 +6,9 @@ import { first } from 'rxjs/operators';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
 
+/**
+ * Component which handles registration form
+ */
 @Component({
     selector: 'app-register',
     templateUrl: 'register.component.html'

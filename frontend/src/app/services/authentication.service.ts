@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import config from '../helpers/config';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
 
+/**
+ * Service for authenticating the user
+ */
 @Injectable()
 export class AuthenticationService {
     /**

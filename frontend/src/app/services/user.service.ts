@@ -4,6 +4,9 @@ import { Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import config from '../helpers/config';
 
+/**
+ * Service which handles user requests
+ */
 @Injectable()
 export class UserService {
     /**

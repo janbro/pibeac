@@ -4,6 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserService } from './services/user.service';
 import { AuthenticationService } from './services/authentication.service';
 
+/**
+ * Main app component
+ */
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',

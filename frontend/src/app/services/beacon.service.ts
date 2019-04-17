@@ -4,6 +4,9 @@ import { Subject } from 'rxjs';
 import { Beacon } from '../models/beacon.model';
 import config from '../helpers/config';
 
+/**
+ * Service which handles beacon data requests
+ */
 @Injectable()
 export class BeaconService {
     /**
