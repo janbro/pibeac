@@ -210,7 +210,7 @@ export class BeaconManagerPageComponent implements OnInit {
                         setTimeout(function() {
                             this.beacon_data_listener = false;
                             this.getBeaconTraffic(beacon_id);
-                        }.bind(this), 1000 * 3);
+                        }.bind(this), 1000 * 5);
                     }
                 },
                 error => {
