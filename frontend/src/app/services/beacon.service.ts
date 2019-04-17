@@ -16,6 +16,11 @@ export class BeaconService {
      */
     updated$ = this.beacons.asObservable();
 
+    /**
+     * Constructor
+     *
+     * @param http Http client for sending requests
+     */
     constructor(private http: HttpClient) { }
 
     /**

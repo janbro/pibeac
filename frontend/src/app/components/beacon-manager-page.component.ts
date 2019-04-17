@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
@@ -45,6 +44,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class BeaconManagerPageComponent implements OnInit {
 
+    /**
+     * Chart options for traffic data
+     */
     public chartOptions: ChartOptions = {
         responsive: true,
         // We use these empty structures as placeholders for dynamic theming.
@@ -60,11 +62,22 @@ export class BeaconManagerPageComponent implements OnInit {
         }
     };
 
+    /**
+     * Chart labels for traffic data
+     */
     public chartLabels: Label[] = ['-59', '-58', '-57', '-56', '-55', '-54', '-53', '-52', '-51', '-50', '-49', '-48', '-47', '-46', '-45',
                                     '-44', '-43', '-42', '-41', '-40', '-39', '-38', '-37', '-36', '-35', '-34', '-33', '-32', '-31', '-30',
                                     '-29', '-28', '-27', '-26', '-25', '-24', '-23', '-22', '-21', '-20', '-19', '-18', '-17', '-16', '-15',
                                     '-14', '-13', '-12', '-11', '-10', '-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', '-0'];
+
+    /**
+     * Chart type
+     */
     public chartType: ChartType = 'line';
+
+    /**
+     * Determines whether or not to show the legend
+     */
     public chartLegend = true;
 
     /**
@@ -92,8 +105,14 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     beacons;
 
+    /**
+     * Currently displayed graph beacon id
+     */
     beac_id;
 
+    /**
+     * Used to determine if the graph data event listener is running
+     */
     beacon_data_listener;
 
     /**
@@ -121,12 +140,22 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     addgroup = false;
 
+    /**
+     * Previously displayed graph data
+     */
     prevdata;
 
+    /**
+     * Subscribe to beaconService updates for beacon data and populate graph data
+     *
+     * @param alertService Displays notifications for the page
+     * @param beaconService Updates data on owned beacons
+     * @param userService Updates data of currently logged in user
+     * @param router Helps navigate users
+     */
     constructor(private alertService: AlertService,
                 private beaconService: BeaconService,
                 private userService: UserService,
-                private formBuilder: FormBuilder,
                 private router: Router) {
 
         beaconService.updated$.subscribe(_groups => {
@@ -156,21 +185,28 @@ export class BeaconManagerPageComponent implements OnInit {
         });
     }
 
+    /**
+     * Runs on page load
+     */
     ngOnInit() {
         this.beaconService.updateBeacons();
     }
 
-    getData(beacon_id) {
-        return [{ data: this.graphdata[beacon_id].map((tr) => {
-            return tr.detected_dev_dists.length;
-        }), label: 'minutes'}];
-    }
-
+    /**
+     * Sets the beacon id of the currently open beacon context
+     *
+     * @param beacon_id The id of the currently open beacon
+     */
     setOpenBeacon(beacon_id) {
         if (beacon_id !== this.beac_id) { this.beacon_data_listener = false; }
         this.beac_id = beacon_id;
     }
 
+    /**
+     * Populates the graphdata object with data for a specified beacon
+     *
+     * @param beacon_id The id of the beacon to update graph data for
+     */
     getBeaconTraffic(beacon_id) {
         const date = new Date();
         date.setHours(date.getHours() - 1);

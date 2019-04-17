@@ -20,6 +20,13 @@ export class AppComponent implements OnInit {
      */
     token: any;
 
+    /**
+     * Constructor
+     *
+     * @param cookie Used to retrieve and set cookies
+     * @param userService Updates information for logged in user
+     * @param authenticationService Used for authenticating user
+     */
     constructor(private cookie: CookieService,
         private userService: UserService,
         private authenticationService: AuthenticationService) {

@@ -6,10 +6,24 @@ import config from '../helpers/config';
 
 @Injectable()
 export class UserService {
+    /**
+     * Change object to detect changes to user data
+     */
     change: Subject<any> = new Subject<any>();
+    /**
+     * Observable of change detector
+     */
     updated$ = this.change.asObservable();
+    /**
+     * User data
+     */
     user;
 
+    /**
+     * Constructor
+     *
+     * @param http Http client for sending requests
+     */
     constructor(private http: HttpClient) {
         this.change.subscribe((value) => {
             this.user = value;
@@ -64,19 +78,41 @@ export class UserService {
             );
     }
 
+    /**
+     * Sends a new order for owned beacons within a group
+     *
+     * @param group The group in the intended order
+     */
     updateBeaconOrder(group) {
         return this.http.put(`${config.apiUrl}/users/beacons/` + group.name, group);
     }
 
+    /**
+     * Updates which group a beacon belongs to
+     *
+     * @param beacon_id The UID of the target beacon
+     * @param groupname The group name to add to
+     * @param oldgroupname The old group the beacon was in
+     */
     updateBeaconGroup(beacon_id, groupname, oldgroupname) {
         return this.http.put(`${config.apiUrl}/users/beacons/` + groupname + '/' + beacon_id,
             { 'beacon_id': beacon_id, 'groupname': groupname, 'oldgroupname': oldgroupname });
     }
 
+    /**
+     * Adds a new empty group
+     *
+     * @param groupname The name for the new group
+     */
     addGroup(groupname) {
         return this.http.post(`${config.apiUrl}/users/beacons/` + groupname, { name: groupname });
     }
 
+    /**
+     * Removes a group if its empty
+     *
+     * @param groupname Group name
+     */
     deleteGroup(groupname) {
         return this.http.delete(`${config.apiUrl}/users/beacons/` + groupname);
     }

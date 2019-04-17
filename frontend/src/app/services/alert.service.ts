@@ -14,6 +14,11 @@ export class AlertService {
      */
     private keepAfterNavigationChange = false;
 
+    /**
+     * Constructor
+     *
+     * @param router Helps navigate users
+     */
     constructor(private router: Router) {
         // clear alert message on route change
         router.events.subscribe(event => {

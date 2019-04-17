@@ -27,6 +27,12 @@ export class AuthenticationService {
      */
     logoutEmitted$ = this.emitLogoutSource.asObservable();
 
+    /**
+     * Constructor
+     *
+     * @param http Http client for sending requests
+     * @param cookie Used to retrieve and set cookies
+     */
     constructor(private http: HttpClient, private cookie: CookieService) { }
 
     /**

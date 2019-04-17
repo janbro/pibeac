@@ -38,10 +38,28 @@ import { UserService } from '../services/user.service';
 })
 export class ProfilePageComponent implements OnInit {
 
+    /**
+     * The currently logged in user
+     */
     user;
+
+    /**
+     * The password to change to
+     */
     pswd;
+
+    /**
+     * The password again to verify
+     */
     pswdr;
 
+    /**
+     * Subscribe to userService updates
+     *
+     * @param cookie Used to retrieve and set cookies
+     * @param router Helps navigate users
+     * @param userService Updates information for logged in user
+     */
     constructor(
         private cookie: CookieService,
         private router: Router,
@@ -59,6 +77,9 @@ export class ProfilePageComponent implements OnInit {
         });
     }
 
+    /**
+     * Runs on page load
+     */
     ngOnInit() {
         try {
             this.userService.updateUser(JSON.parse(this.cookie.get('token')).id);

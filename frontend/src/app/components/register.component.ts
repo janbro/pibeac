@@ -26,6 +26,14 @@ export class RegisterComponent implements OnInit {
      */
     submitted = false;
 
+    /**
+     * Constructor
+     *
+     * @param formBuilder The register form for the page
+     * @param router Helps navigate users
+     * @param userService Updates information for logged in user
+     * @param alertService Displays notifications for the page
+     */
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,

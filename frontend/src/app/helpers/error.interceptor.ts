@@ -8,6 +8,12 @@ import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
+    /**
+     * Constructor
+     *
+     * @param authenticationService Used for authenticating user
+     * @param router Helps navigate users
+     */
     constructor(private authenticationService: AuthenticationService,
                 private router: Router) { }
 

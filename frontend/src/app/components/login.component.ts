@@ -31,6 +31,15 @@ export class LoginComponent implements OnInit {
      */
     returnUrl: string;
 
+    /**
+     * Constructor
+     *
+     * @param formBuilder The login form for the page
+     * @param route Helps pull url parameters
+     * @param router Helps navigate users
+     * @param authenticationService Authenticates users tokens
+     * @param alertService Displays notifications for the page
+     */
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -38,6 +47,9 @@ export class LoginComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private alertService: AlertService) { }
 
+    /**
+     * Runs on page load
+     */
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
