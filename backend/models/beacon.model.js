@@ -11,6 +11,10 @@ var BeaconSchema = new Schema(
         "id": String,
         "name": String,
         "owner": String,
+        "collect_data": {
+            type: Boolean,
+            optional: true
+        },
         "action": {
             "value": String,
             "kind": Number

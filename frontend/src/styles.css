@@ -4,3 +4,7 @@
     filter: alpha(opacity=40);
     background-color: #000;
 }
+
+.clickable {
+    cursor: pointer;
+}

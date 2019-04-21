@@ -8,6 +8,7 @@ import { Label } from 'ng2-charts';
 import { ActionPipe } from '../pipes/action.pipe';
 import { AlertService } from '../services/alert.service';
 import { BeaconService } from '../services/beacon.service';
+import { Beacon } from '../models/beacon.model';
 import { UserService } from '../services/user.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
@@ -148,6 +149,11 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     prevdata;
 
+
+    onChangeCategory(event, beacon: Beacon) {
+      beacon.collect_data = event.target.checked;
+    }
+
     /**
      * Subscribe to beaconService updates for beacon data and populate graph data
      *
@@ -268,6 +274,7 @@ export class BeaconManagerPageComponent implements OnInit {
         const beacon = {
             id: event.target.form[`inputId`].value,
             name: event.target.form[`inputName`].value,
+            collect_data: event.target.form[event.target.form[`inputId`].value].checked,
             action: {
                 kind: event.target.form[`action_kind`].value,
                 value: event.target.form[`action_value`].value

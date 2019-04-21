@@ -19,6 +19,10 @@ export class Beacon {
      */
     owner?: string;
     /**
+     * Whether or not to collect anonymous traffic data
+     */
+    collect_data: boolean;
+    /**
      * Action
      */
     action: {

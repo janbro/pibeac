@@ -135,9 +135,21 @@
                                         <input type="text" class="form-control" id="action_value" placeholder="value" value="{{beacon.action.value}}">
                                     </div>
                                 </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <div class="form-control" style="border:none;">
+                                        <input type="checkbox" name="beacon.id" id="{{beacon.id}}" aria-label="Collect anonymous scanning data" (change)="onChangeCategory($event, beacon)" [(ngModel)]="beacon.collect_data">
+                                        </div>
+                                    </div>
+                                    <a class="form-control" style="border:none;padding-left: 3px;padding-top: 8px;" aria-label="Collect anonymous scanning data">
+                                        Collect and display anonymous scanning data
+                                        <i class="far fa-question-circle clickable"></i>
+                                    </a>
+                                </div>
                             </form>
 
-                            <div class="graph-container" *ngIf="graphdata && graphdata[beacon.id] && graphdata[beacon.id].data.length > 0">
+                            <div class="graph-container" *ngIf="beacon.collect_data && graphdata && graphdata[beacon.id] && graphdata[beacon.id].data.length > 0">
                                 <div class="flex">
                                     <div class="flex-item">
                                         <div style="display: block;">
