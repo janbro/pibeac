@@ -59,6 +59,10 @@ export class BeaconService {
         return this.http.get(`${config.apiUrl}/traffic/${id}`);
     }
 
+    getTrafficByIdAndType(id, type) {
+        return this.http.get(`${config.apiUrl}/traffic/${id}?type=${type}`);
+    }
+
     getTrafficByMin(id, min) {
         return this.http.get(`${config.apiUrl}/traffic/${id}?min=${min}`);
     }

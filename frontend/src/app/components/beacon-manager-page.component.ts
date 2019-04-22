@@ -69,10 +69,7 @@ export class BeaconManagerPageComponent implements OnInit {
     /**
      * Chart labels for traffic data
      */
-    public chartLabels: Label[] = ['-59', '-58', '-57', '-56', '-55', '-54', '-53', '-52', '-51', '-50', '-49', '-48', '-47', '-46', '-45',
-                                    '-44', '-43', '-42', '-41', '-40', '-39', '-38', '-37', '-36', '-35', '-34', '-33', '-32', '-31', '-30',
-                                    '-29', '-28', '-27', '-26', '-25', '-24', '-23', '-22', '-21', '-20', '-19', '-18', '-17', '-16', '-15',
-                                    '-14', '-13', '-12', '-11', '-10', '-9', '-8', '-7', '-6', '-5', '-4', '-3', '-2', '-1', '-0'];
+    public chartLabels: Label[];
 
     /**
      * Chart type
@@ -135,6 +132,16 @@ export class BeaconManagerPageComponent implements OnInit {
     loading_id;
 
     /**
+     * Loading beacon graph data
+     */
+    loading_beacon_data = false;
+
+    /**
+     * Used to determine which spinner to use
+     */
+    loading_beacon_data_id;
+
+    /**
      * Input form group name
      */
     groupname;
@@ -149,7 +156,22 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     prevdata;
 
+    /**
+     * Distance options
+     */
     distances = [{name: 'Immediate (< 0.5 m)', value: 0.5 }, { name: 'Near (< 3 m)', value: 3 }, { name: 'Far (> 3 m)', value: 99 }];
+
+    /**
+     * Graph data time period option
+     */
+    time_periods = [{name: 'minutes', value: 'minute'}, {name: 'hours', value: 'hour'}, {name: 'days', value: 'day'}];
+
+    getNameByProperty(obj, key, value) {
+        if (key == null || value == null) {
+            return undefined;
+        }
+        return obj.find((o) => o[key] === value).name;
+    }
 
     getNameFromDistance(dist) {
         if (dist == null) {
@@ -157,7 +179,6 @@ export class BeaconManagerPageComponent implements OnInit {
         }
         return this.distances.find((obj) => dist <= obj.value ).name;
     }
-
 
     onChangeCategory(event, beacon: Beacon) {
       beacon.collect_data = event.target.checked;
@@ -179,13 +200,8 @@ export class BeaconManagerPageComponent implements OnInit {
         beaconService.updated$.subscribe(_groups => {
             setTimeout(async () => {
                 this.groups = _groups;
-                this.groups.forEach((group) => {
-                    group.beacons.forEach((beacon) => {
-                        this.getBeaconTraffic(beacon.id);
-                    });
-                });
                 if (this.group === undefined || this.group.name === '') {
-                    this.loadBeacons(this.groups[0]);
+                    await this.loadBeacons(this.groups[0]);
                 } else {
                     await _groups.some(group => {
                         if (group.name === (this.group ? this.group.name : '')) {
@@ -194,6 +210,11 @@ export class BeaconManagerPageComponent implements OnInit {
                     });
                     this.beacons = this.group && this.group.beacons.length > 0 ? this.group.beacons : undefined;
                 }
+                this.groups.forEach((group) => {
+                    group.beacons.forEach((beacon) => {
+                        this.getBeaconTraffic(beacon.id);
+                    });
+                });
                 this.alertService.clear();
                 this.loading = false;
                 if (!this.groups) {
@@ -220,49 +241,74 @@ export class BeaconManagerPageComponent implements OnInit {
         this.beac_id = beacon_id;
     }
 
+    timeToNumber(type) {
+        switch (type) {
+            case 'minute':
+                {
+                    return 60;
+                }
+            case 'hour':
+                {
+                    return 24;
+                }
+            case 'day':
+                {
+                    return 7;
+                }
+            default:
+                {
+                    return 60;
+                }
+        }
+    }
+
     /**
      * Populates the graphdata object with data for a specified beacon
      *
      * @param beacon_id The id of the beacon to update graph data for
      */
     getBeaconTraffic(beacon_id) {
-        if (!this.beacon_data_listener && this.beac_id === beacon_id) {
+        let beacon = this.beacons.find((beac) => beac.id === beacon_id);
+        if (!this.beacon_data_listener && this.beac_id === beacon_id && (!beacon || beacon.collect_data)) {
             this.beacon_data_listener = true;
-            this.beaconService.getTrafficById(beacon_id).subscribe(
+            this.beaconService.getTrafficByIdAndType(beacon_id, beacon ? beacon.graph_time_period : 'minute').subscribe(
                 data => {
+                    if (data === null) {
+                        this.loading_beacon_data = false;
+                        return;
+                    }
                     let d: any;
                     d = data;
-                    let time = 0;
-                    const traffic = d.slice(d.length - 60 > 0 ? d.length - 60 : 0, d.length).map((tr) => {
-                        time += 1;
+                    const traffic = d.map((tr) => {
                         return tr['detected_dev_dists']['length'];
                     });
-                    if (traffic.length > 0) {
+                    beacon = this.beacons.find((beac) => beac.id === beacon_id);
+
+                    this.chartLabels = Array.from({length: traffic.length}, (v, k) => '-' + (k)).reverse();
+                    if (traffic.length > 0 && (beacon && traffic.length === this.timeToNumber(beacon.graph_time_period)) ) {
                         if (JSON.stringify(this.prevdata) !== JSON.stringify(traffic) && this.graphdata[beacon_id]) {
                             this.prevdata = traffic;
-                            while (traffic.length < 60) {
-                                time += 1;
-                                traffic.unshift(0);
-                            }
                             this.graphdata[beacon_id] = {
                                 data: traffic,
                                 label: '# of devices'
                             };
                         } else if (!this.graphdata[beacon_id]) {
                             this.prevdata = traffic;
-                            while (traffic.length < 60) {
-                                time += 1;
-                                traffic.unshift(0);
-                            }
                             this.graphdata[beacon_id] = {
                                 data: traffic,
                                 label: '# of devices'
                             };
                         }
+                        this.loading_beacon_data = false;
+                        setTimeout(function() {
+                            this.beacon_data_listener = false;
+                            this.getBeaconTraffic(beacon_id, true);
+                        }.bind(this), 1000 * 5);
+                    } else if (beacon && traffic.length !== this.timeToNumber(beacon.graph_time_period)) {
                         setTimeout(function() {
                             this.beacon_data_listener = false;
                             this.getBeaconTraffic(beacon_id);
-                        }.bind(this), 1000 * 5);
+                        }.bind(this), 0);
                     }
                 },
                 error => {
@@ -288,8 +334,13 @@ export class BeaconManagerPageComponent implements OnInit {
                 value: event.target.form[`action_value`].value
             }
         };
+        if (event.target.form[`graph_time_period`]) {
+            beacon['graph_time_period'] = event.target.form[`graph_time_period`].value;
+        }
         this.loading = true;
         this.loading_id = beacon.id;
+        this.loading_beacon_data = true;
+        this.loading_beacon_data_id = beacon.id;
         this.alertService.clear();
         this.beaconService.update(beacon).subscribe(
             data => {
@@ -323,8 +374,10 @@ export class BeaconManagerPageComponent implements OnInit {
      * @param group Group of beacons to load
      */
     loadBeacons(group) {
-        this.group = group;
-        this.beacons = group && group.beacons.length > 0 ? group.beacons : undefined;
+        return new Promise(() => {
+            this.group = group;
+            this.beacons = group && group.beacons.length > 0 ? group.beacons : undefined;
+        });
     }
 
     /**

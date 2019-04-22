@@ -15,6 +15,10 @@ var BeaconSchema = new Schema(
             type: Boolean,
             optional: true
         },
+        "graph_time_period": {
+            type: String,
+            optional: true
+        },
         "action": {
             "value": String,
             "kind": Number

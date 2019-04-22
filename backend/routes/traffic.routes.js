@@ -15,7 +15,7 @@ router.route('/')
 /* Beacon information
  */
 router.route('/:id')
-  .get(controller.getTrafficByBeaconId)
+  .get(controller.getTrafficByBeaconIdAndType)
   .post(controller.addTrafficByBeaconId);
   // ADMIN ROUTES
   //.delete(controller.delete);

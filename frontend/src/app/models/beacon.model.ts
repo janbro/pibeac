@@ -23,6 +23,10 @@ export class Beacon {
      */
     collect_data: boolean;
     /**
+     * What time period graph should be in seconds
+     */
+    graph_time_period?: string;
+    /**
      * Action
      */
     action: {
