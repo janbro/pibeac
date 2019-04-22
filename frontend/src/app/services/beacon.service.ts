@@ -55,18 +55,42 @@ export class BeaconService {
             );
     }
 
+    /**
+     * Returns promise to traffic data by id
+     *
+     * @param id Beacon id
+     */
     getTrafficById(id) {
         return this.http.get(`${config.apiUrl}/traffic/${id}`);
     }
 
+    /**
+     * Returns promise to traffic data by id and time period type
+     *
+     * @param id Beacon id
+     * @param type The time period type
+     */
     getTrafficByIdAndType(id, type) {
         return this.http.get(`${config.apiUrl}/traffic/${id}?type=${type}`);
     }
 
+    /**
+     * Returns promise to traffic data by minimum time
+     *
+     * @param id Beacon id
+     * @param min Minimum time traffic data must be in UTC ms since Epoch
+     */
     getTrafficByMin(id, min) {
         return this.http.get(`${config.apiUrl}/traffic/${id}?min=${min}`);
     }
 
+    /**
+     * Returns promise to traffic data within time zone
+     *
+     * @param id Beacon id
+     * @param min Minimum time traffic data must be in UTC ms since Epoch
+     * @param min Maximum time traffic data must be in UTC ms since Epoch
+     */
     getTrafficByMinMax(id, min, max) {
         return this.http.get(`${config.apiUrl}/traffic/${id}?min=${min}&max=${max}`);
     }

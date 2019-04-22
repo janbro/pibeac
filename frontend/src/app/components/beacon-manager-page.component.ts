@@ -166,24 +166,6 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     time_periods = [{name: 'minutes', value: 'minute'}, {name: 'hours', value: 'hour'}, {name: 'days', value: 'day'}];
 
-    getNameByProperty(obj, key, value) {
-        if (key == null || value == null) {
-            return undefined;
-        }
-        return obj.find((o) => o[key] === value).name;
-    }
-
-    getNameFromDistance(dist) {
-        if (dist == null) {
-            return undefined;
-        }
-        return this.distances.find((obj) => dist <= obj.value ).name;
-    }
-
-    onChangeCategory(event, beacon: Beacon) {
-      beacon.collect_data = event.target.checked;
-    }
-
     /**
      * Subscribe to beaconService updates for beacon data and populate graph data
      *
@@ -234,6 +216,38 @@ export class BeaconManagerPageComponent implements OnInit {
     }
 
     /**
+     * Returns the name property of matching key value pair
+     */
+    getNameByProperty(obj, key, value) {
+        if (key == null || value == null) {
+            return undefined;
+        }
+        return obj.find((o) => o[key] === value).name;
+    }
+
+    /**
+     * Gets the human friendly name for distances
+     *
+     * @param dist The distance in meters
+     */
+    getNameFromDistance(dist) {
+        if (dist == null) {
+            return undefined;
+        }
+        return this.distances.find((obj) => dist <= obj.value ).name;
+    }
+
+    /**
+     * When the beacon checkbox changes
+     *
+     * @param event The event that triggered the callback
+     * @param beacon The currently opened beacon
+     */
+    onChangeCategory(event, beacon: Beacon) {
+      beacon.collect_data = event.target.checked;
+    }
+
+    /**
      * Sets the beacon id of the currently open beacon context
      *
      * @param beacon_id The id of the currently open beacon
@@ -243,6 +257,9 @@ export class BeaconManagerPageComponent implements OnInit {
         this.beac_id = beacon_id;
     }
 
+    /**
+     * Returns the max amount of data for time periods
+     */
     timeToNumber(type) {
         switch (type) {
             case 'minute':
