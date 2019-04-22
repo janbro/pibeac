@@ -77,8 +77,8 @@
         </h2>
     </div>
     <div cdkDropList class="accordion mb-5" (cdkDropListDropped)="drop($event)" id="accordion" [@fade-in]="beacons && !(loading && loading_id == 'group') ? 'visible' : 'invisible'">
-        <div cdkDrag class="card" id="{{beacon._id}}" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let beacon of beacons; let i = index">
-            <div cdkDragHandle class="card-header" style="height:110px;" id="heading{{i}}" (click)="setOpenBeacon(beacon.id);getBeaconTraffic(beacon.id);">
+        <div cdkDrag class="card" id="{{beacon._id}}" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let beacon of beacons; let i = index" (click)="setOpenBeacon(beacon.id);getBeaconTraffic(beacon.id);">
+            <div cdkDragHandle class="card-header" style="height:110px;" id="heading{{i}}">
                 <h5 class="mb-0 row">
                     <div class="col-9 col-lg-10">
                         <div class="row">
