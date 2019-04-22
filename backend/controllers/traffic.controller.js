@@ -68,8 +68,22 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                                 for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60; i++) {
                                     docs.push({
                                         "detected_dev_dists": [],
-                                        "time": 0,
+                                        "time": t + i * 1000 * 60,
                                     });
+                                }
+                            }
+                            for(let i=docs.length - 1; i > 1; i--) {
+                                if((docs[i].time - docs[i - 1].time) / (1000) >= 65) {
+                                    const base_time = docs[i].time;
+                                    let padding = Math.floor((docs[i].time - docs[i - 1].time) / (1000 * 60));
+                                    let offset = padding;
+                                    for(padding; padding > 0; padding--) {
+                                        docs.splice(i - 1, 0, {
+                                            "detected_dev_dists": [],
+                                            "time": base_time - (1000 * 60) * padding,
+                                        });
+                                    }
+                                    i -= offset;
                                 }
                             }
                             if(docs.length > 60) {
@@ -100,23 +114,36 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                             let d = new Date();
                             if(d.getTime() - docs[docs.length - 1].time >= 60 * 1000) {
                                 let t = docs[docs.length - 1].time;
-                                let i;
-                                for(i=0; i < Math.floor(d.getTime() - t) / (1000 * 60) && i < 60; i++) {
+                                for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60; i++) {
                                     docs.push({
                                         "detected_dev_dists": [],
-                                        "time": 0,
+                                        "time": t + i * 1000 * 60,
                                     });
+                                }
+                            }
+                            for(let i=docs.length - 1; i > 1; i--) {
+                                if((docs[i].time - docs[i - 1].time) / (1000) >= 65) {
+                                    const base_time = docs[i].time;
+                                    let padding = Math.floor((docs[i].time - docs[i - 1].time) / (1000));
+                                    let offset = padding;
+                                    for(padding; padding > 0; padding--) {
+                                        docs.splice(i - 1, 0, {
+                                            "detected_dev_dists": [],
+                                            "time": base_time - (1000 * 60) * padding,
+                                        });
+                                    }
+                                    i -= offset;
                                 }
                             }
                             let hours = 24;
                             let minutes = 0;
                             let avg = 0;
                             let result = [];
-                            for(let i = 0; i < docs.length && hours > 0; i++) {
+                            for(let i = docs.length - 1; i >= 0 && hours > 0; i--) {
                                 avg += docs[i].detected_dev_dists.length;
 
-                                if(minutes >= 60 || i === docs.length - 1) {
-                                    result.push({
+                                if(minutes >= 60 || i === 0) {
+                                    result.unshift({
                                         "detected_dev_dists": Array(Math.ceil(avg/minutes)),
                                         "time": docs[i].time,
                                     });
@@ -149,11 +176,25 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                         let d = new Date();
                         if(d.getTime() - docs[docs.length - 1].time >= 60 * 1000) {
                             let t = docs[docs.length - 1].time;
-                            for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60 * 24; i++) {
+                            for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60; i++) {
                                 docs.push({
                                     "detected_dev_dists": [],
-                                    "time": 0,
+                                    "time": t + i * 1000 * 60,
                                 });
+                            }
+                        }
+                        for(let i=docs.length - 1; i > 1; i--) {
+                            if((docs[i].time - docs[i - 1].time) / (1000) >= 65) {
+                                const base_time = docs[i].time;
+                                let padding = Math.floor((docs[i].time - docs[i - 1].time) / (1000 * 60));
+                                let offset = padding;
+                                for(padding; padding > 0; padding--) {
+                                    docs.splice(i - 1, 0, {
+                                        "detected_dev_dists": [],
+                                        "time": base_time - (1000 * 60) * padding,
+                                    });
+                                }
+                                i -= offset;
                             }
                         }
                         if(docs.length === 0) {
@@ -163,12 +204,12 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                             let minutes = 0;
                             let avg = 0;
                             let result = [];
-                            for(let i = 0; i < docs.length && days > 0; i++) {
+                            for(let i = docs.length - 1; i >= 0 && days > 0; i--) {
                                 avg += docs[i].detected_dev_dists.length;
 
                                 minutes++;
-                                if(minutes >= 60 * 24 || i === docs.length - 1) {
-                                    result.push({
+                                if(minutes >= 60 * 24 || i === 0) {
+                                    result.unshift({
                                         "detected_dev_dists": Array(Math.ceil(avg/minutes)),
                                         "time": docs[i].time,
                                     });
