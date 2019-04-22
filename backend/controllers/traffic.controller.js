@@ -64,7 +64,7 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                             let d = new Date();
                             if(d.getTime() - docs[docs.length - 1].time >= 60 * 1000) {
                                 let t = docs[docs.length - 1].time;
-                                for(let i=0; i < Math.floor(d.getTime() - t / 1000) && i < 60; i++) {
+                                for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60; i++) {
                                     docs.push({
                                         "detected_dev_dists": [],
                                         "time": 0,
@@ -96,6 +96,17 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                         if(docs.length === 0) {
                             res.status(200).send();
                         } else {
+                            let d = new Date();
+                            if(d.getTime() - docs[docs.length - 1].time >= 60 * 1000) {
+                                let t = docs[docs.length - 1].time;
+                                let i;
+                                for(i=0; i < Math.floor(d.getTime() - t) / (1000 * 60) && i < 60; i++) {
+                                    docs.push({
+                                        "detected_dev_dists": [],
+                                        "time": 0,
+                                    });
+                                }
+                            }
                             let hours = 24;
                             let minutes = 0;
                             let avg = 0;
@@ -134,6 +145,16 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
                     if(err) {
                         res.status(400).send(err);
                     } else {
+                        let d = new Date();
+                        if(d.getTime() - docs[docs.length - 1].time >= 60 * 1000) {
+                            let t = docs[docs.length - 1].time;
+                            for(let i=0; i < (Math.floor(d.getTime() - t) / (1000 * 60)) && i < 60 * 24; i++) {
+                                docs.push({
+                                    "detected_dev_dists": [],
+                                    "time": 0,
+                                });
+                            }
+                        }
                         if(docs.length === 0) {
                             res.status(200).send();
                         } else {
