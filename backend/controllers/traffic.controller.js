@@ -1,5 +1,6 @@
 /* Dependencies */
 var Traffic = require('../models/traffic.model.js');
+var Beacon = require('../models/beacon.model');
 var jwt = require('jsonwebtoken');
 
 exports.read = function(req, res) {
@@ -200,11 +201,21 @@ exports.getTrafficByBeaconIdAndType = function(req, res) {
 exports.addTrafficByBeaconId = function(req, res) {
     var traffic = new Traffic(req.body);
     traffic.beacon_id = req.beacon_id;
-    traffic.save(function (err) {
-        if (err) {
+    Beacon.findOne({"id": traffic.beacon_id}, (err, beacon) => {
+        if(err) {
+            console.log(err);
             res.status(400).send(err);
+        }
+        else if(beacon.collect_data) {
+            traffic.save(function (err) {
+                if (err) {
+                    res.status(400).send(err);
+                } else {
+                    res.status(200).send({text: "Saved document " + traffic.beacon_id});
+                }
+            });
         } else {
-            res.status(200).send({text: "Saved document " + traffic.beacon_id});
+            res.status(403).send({error: "User opted to not collect data"});
         }
     });
     
