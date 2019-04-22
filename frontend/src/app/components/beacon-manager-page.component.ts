@@ -149,6 +149,15 @@ export class BeaconManagerPageComponent implements OnInit {
      */
     prevdata;
 
+    distances = [{name: 'Immediate (< 0.5 m)', value: 0.5 }, { name: 'Near (< 3 m)', value: 3 }, { name: 'Far (> 3 m)', value: 99 }];
+
+    getNameFromDistance(dist) {
+        if (dist == null) {
+            return undefined;
+        }
+        return this.distances.find((obj) => dist <= obj.value ).name;
+    }
+
 
     onChangeCategory(event, beacon: Beacon) {
       beacon.collect_data = event.target.checked;
@@ -217,11 +226,9 @@ export class BeaconManagerPageComponent implements OnInit {
      * @param beacon_id The id of the beacon to update graph data for
      */
     getBeaconTraffic(beacon_id) {
-        const date = new Date();
-        date.setHours(date.getHours() - 1);
         if (!this.beacon_data_listener && this.beac_id === beacon_id) {
             this.beacon_data_listener = true;
-            this.beaconService.getTrafficByMin(beacon_id, date.getTime()).subscribe(
+            this.beaconService.getTrafficById(beacon_id).subscribe(
                 data => {
                     let d: any;
                     d = data;
@@ -275,6 +282,7 @@ export class BeaconManagerPageComponent implements OnInit {
             id: event.target.form[`inputId`].value,
             name: event.target.form[`inputName`].value,
             collect_data: event.target.form[event.target.form[`inputId`].value].checked,
+            distance: event.target.form[`distance`].value,
             action: {
                 kind: event.target.form[`action_kind`].value,
                 value: event.target.form[`action_value`].value

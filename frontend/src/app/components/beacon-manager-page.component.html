@@ -80,7 +80,7 @@
         <div cdkDrag class="card" id="{{beacon._id}}" style="border: 1px solid rgba(0,0,0,.125);" *ngFor="let beacon of beacons; let i = index">
             <div cdkDragHandle class="card-header" style="height:110px;" id="heading{{i}}" (click)="setOpenBeacon(beacon.id);getBeaconTraffic(beacon.id);">
                 <h5 class="mb-0 row">
-                    <div class="col-10">
+                    <div class="col-9 col-lg-10">
                         <div class="row">
                             <h3 class="col-auto" data-toggle="collapse" attr.data-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}">
                                 {{beacon.name}}
@@ -90,7 +90,7 @@
                             {{beacon.action.value}}
                         </h5>
                     </div>
-                    <div class="col-2">
+                    <div class="col-2" style="padding-left:0px;">
                         <div class="{{beacon.action.kind | action:'color'}}" *ngIf="beacon.action">
                             <div class="icon-container" [@fade-in]="loading_id==beacon.id"  data-toggle="collapse" attr.data-target="#collapse{{i}}" aria-expanded="true" attr.aria-controls="collapse{{i}}">
                                 <div class="action-icon" [@fade-out]="!loading || loading_id!=beacon.id ? 'visible' : 'invisible'">
@@ -111,11 +111,20 @@
                         <li class="list-group-item">
                             <form (change)="updateBeacon($event)">
                                 <div class="form-group row align-items-center">
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <label for="inputName">Name</label>
                                         <input class="form-control" id="inputName" placeholder="Name" value="{{beacon.name}}">
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-4">
+                                        <label for="distName">Distance</label>
+                                        <select class="custom-select" id="distance">
+                                            <option value={{beacon.distance}} selected>{{getNameFromDistance(beacon.distance)}}</option>
+                                            <ng-container *ngFor="let dist of distances">
+                                                <option value="{{dist.value}}">{{dist.name}}</option>
+                                            </ng-container>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
                                         <label for="inputId">ID</label>
                                         <input class="form-control" id="inputId" placeholder="0x000..." value="{{beacon.id}}" disabled>
                                     </div>
@@ -130,7 +139,7 @@
                                             </ng-container>
                                         </select>
                                     </div>
-                                    <div class="col-8">
+                                    <div class="col-10 col-sm-9">
                                         <label class="sr-only" for="action_value">Value</label>
                                         <input type="text" class="form-control" id="action_value" placeholder="value" value="{{beacon.action.value}}">
                                     </div>
