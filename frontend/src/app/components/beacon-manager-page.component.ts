@@ -211,6 +211,8 @@ export class BeaconManagerPageComponent implements OnInit {
                     this.beacons = this.group && this.group.beacons.length > 0 ? this.group.beacons : undefined;
                 }
                 this.groups.forEach((group) => {
+                    this.loading_beacon_data_id = this.beac_id;
+                    this.loading_beacon_data = true;
                     group.beacons.forEach((beacon) => {
                         this.getBeaconTraffic(beacon.id);
                     });
@@ -339,8 +341,6 @@ export class BeaconManagerPageComponent implements OnInit {
         }
         this.loading = true;
         this.loading_id = beacon.id;
-        this.loading_beacon_data = true;
-        this.loading_beacon_data_id = beacon.id;
         this.alertService.clear();
         this.beaconService.update(beacon).subscribe(
             data => {
