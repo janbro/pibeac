@@ -63,24 +63,26 @@ exports.getBeaconById = function(req, res, next, id) {
             console.log(err);
             res.status(400).send(err);
         } else if(distance && distance < beacon.distance) {
-            req.beacon = beacon;
-            User.findOne({'_id': req.beacon.owner}).exec((err, user) => {
+            User.findOne({'_id': beacon.owner}).exec((err, user) => {
                 if(err) {
                     console.log(err);
                     res.status(400).send(err);
                 } else {
-                    req.beacon.ownername = user.name;
+                    let beac = beacon.toObject();
+                    beac.ownername = user.name;
+                    req.beacon = beac;
                     next();
                 }
             });
         } else if(!distance) {
-            req.beacon = beacon;
-            User.findOne({'_id': req.beacon.owner}).exec((err, user) => {
+            User.findOne({'_id': beacon.owner}).exec((err, user) => {
                 if(err) {
                     console.log(err);
                     res.status(400).send(err);
                 } else {
-                    req.beacon.ownername = user.name;
+                    let beac = beacon.toObject();
+                    beac.ownername = user.name;
+                    req.beacon = beac;
                     next();
                 }
             });
