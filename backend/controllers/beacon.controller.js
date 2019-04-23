@@ -86,6 +86,18 @@ exports.getBeaconById = function(req, res, next, id) {
                     next();
                 }
             });
+        } else if(!distance) {
+            User.findOne({'_id': beacon.owner}).exec((err, user) => {
+                if(err) {
+                    console.log(err);
+                    res.status(400).send(err);
+                } else {
+                    let beac = beacon.toObject();
+                    beac.ownername = user.name;
+                    req.beacon = beac;
+                    next();
+                }
+            });
         } else {
             res.status(403).send({text: "User not close enough"});
         }
