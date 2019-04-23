@@ -74,7 +74,7 @@ exports.getBeaconById = function(req, res, next, id) {
                     next();
                 }
             });
-        } else if(!distance) {
+        } else if(!beacon.distance) {
             User.findOne({'_id': beacon.owner}).exec((err, user) => {
                 if(err) {
                     console.log(err);
