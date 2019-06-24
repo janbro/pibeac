@@ -1,4 +1,8 @@
-# pibeac 
+# pibeac: A Physical Approach to Navigating the Web
+
+The piBeac protocol makes use of Bluetooth LE (Low Energy) technology to allow a piBeac beacon (i.e., a Raspberry Pi) to broadcast a unique ID that can be picked up by a mobile device. A mobile application is able to automatically scan for these IDs and query the web server for information related to the beacon (e.g., owner information, URL, menu, etc.). Beacon owners can modify beacon mappings and view live foot traffic data in the web ui.
+
+
 ## Backend/Frontend Deployment - https://pibeac.herokuapp.com/
 Automated testing will occur for any branch pushed to the repository. Automatic deployment to the production server on Heroku occurs on changes to master. To deploy your changes, create a PR for your branch to master. After test scripts are run and passing, the site will be deployed once the changes are merged into master.
 
